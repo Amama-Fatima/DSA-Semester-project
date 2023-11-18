@@ -26,6 +26,9 @@ int main (){
     const int MAX_BOOKS = 100;
     Book* head = NULL;
 
+
+    ///THIS PART IS FILE HANDLING. THE PROGRAM IS READING DATA FROM THE Book Data - Top-100 Trending Books.csv FILE. 
+    ///IGNORE THIS CODE FOR NOW. WE WILL LEARN THAT TOMORROW
     ifstream file("Book Data - Top-100 Trending Books.csv");
     if (!file.is_open()){
         cout << "Error: File not found" << endl;
@@ -36,6 +39,7 @@ int main (){
     getline(file, line); //skip the first line;
 
     while(getline(file, line)){
+        //WHILE LOOP RUNS UNTIL THERE IS STILL A BOOK LEFT TO BE READ
         stringstream sstream(line);
 
         int rank;
@@ -47,8 +51,10 @@ int main (){
         string genre;
         string url;
 
+    //WE ARE READING THE DATA FROM THE FILE AND STORING IT IN THE VARIABLES
     rank = stoi(parseField(sstream));
     cout << "Rank field: '" << rank << "'" << endl;
+
 
     title = parseField(sstream);
     cout << "Title field: '" << title << "'" << endl;
@@ -75,16 +81,16 @@ int main (){
     insertBook(head, rank, title, price, rating, author, yearOfPublication, genre, url);
 
     }
-        file.close();
-        cout << "  " << endl;
-        cout << "  " << endl;
-        cout << "  " << endl;
-        cout << "  " << endl;
-        cout << " PRINTING BOOKS " << endl;
-        cout << "  " << endl;
-        cout << "  " << endl;
-        printBook(head);
-        return 0;
+    file.close();
+    cout << "  " << endl;
+    cout << "  " << endl;
+    cout << "  " << endl;
+    cout << "  " << endl;
+    cout << " PRINTING BOOKS " << endl;
+    cout << "  " << endl;
+    cout << "  " << endl;
+    printBook(head);
+    return 0;
 }
 
 string parseField(stringstream &sstream){
