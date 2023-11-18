@@ -2,6 +2,8 @@
 #include <fstream>
 #include <sstream>
 
+using namespace std;
+
 struct Book{
     int rank;
     string title;
@@ -14,6 +16,8 @@ struct Book{
     Book* next;
 };
 
+
+string parseField(stringstream &sstream);
 void insertBook(Book* &head, int rank, string title, double price, double rating, string author, int yearOfPublication, string genre, string url);
 void printBook(Book* head);
 
@@ -22,7 +26,7 @@ int main (){
     const int MAX_BOOKS = 100;
     Book* head = NULL;
 
-    ifstream file('Top-100 Trending Books.csv');
+    ifstream file("Book Data - Top-100 Trending Books.csv");
     if (!file.is_open()){
         cout << "Error: File not found" << endl;
         return 0;
@@ -30,8 +34,10 @@ int main (){
 
     string line;
     getline(file, line); //skip the first line;
+
     while(getline(file, line)){
         stringstream sstream(line);
+
         int rank;
         string title;
         double price;
@@ -41,39 +47,61 @@ int main (){
         string genre;
         string url;
 
-        getline(sstream, field, ',');
-        rank = stoi(field);
+    rank = stoi(parseField(sstream));
+    cout << "Rank field: '" << rank << "'" << endl;
 
-        getline(sstream, title, ',');
+    title = parseField(sstream);
+    cout << "Title field: '" << title << "'" << endl;
 
-        getline(sstream, field, ',');
-        price = stod(field);
+    price = stod(parseField(sstream));
+    cout << "Price: '" << price << "'" << endl;
 
-        getline(sstream, field, ',');
-        rating = stod(field);
+    rating = stod(parseField(sstream));
+    cout << "Rating: '" << rating << "'" << endl;
 
-        getline(sstream, author, ',');
+    author = parseField(sstream);
+    cout << "Author field: '" << author << "'" << endl;
 
-        getline(sstream, field, ',');
-        yearOfPublication = stoi(field);
+    yearOfPublication = stoi(parseField(sstream));
+    cout << "Year of Publication: '" << yearOfPublication << "'" << endl;
 
-        getline(sstream, genre, ',');
+    genre = parseField(sstream);
+    cout << "Genre field: '" << genre << "'" << endl;
 
-        getline(sstream, url, ',');
+    url = parseField(sstream);
+    cout << "URL field: '" << url << "'" << endl;
 
-        insertBook(head, rank, title, price, rating, author, yearOfPublication, genre, url);
 
+    insertBook(head, rank, title, price, rating, author, yearOfPublication, genre, url);
+
+    }
         file.close();
-
+        cout << "  " << endl;
+        cout << "  " << endl;
+        cout << "  " << endl;
+        cout << "  " << endl;
+        cout << " PRINTING BOOKS " << endl;
+        cout << "  " << endl;
+        cout << "  " << endl;
         printBook(head);
         return 0;
-    }
 }
 
+string parseField(stringstream &sstream){
+        string field;
+        char peekChar = sstream.peek();
+        if(peekChar == '"'){
+            getline(sstream, field, '"');
+            getline(sstream, field, '"');
+            sstream.ignore(1, ',');
+        } else{
+            getline(sstream, field, ',');
+        }
+        return field;
+    }
 
 
-
-void insertBook(Book* &head, int rank, string title, double price, double rating, string author, int yearOfPublication, string genre, string url){
+void insertBook(Book* &head, int rank, string title, double price, double rating, string author, int yearOfPublication, string genre, string url) {
     Book* newBook = new Book;
     newBook->rank = rank;
     newBook->title = title;
@@ -85,10 +113,19 @@ void insertBook(Book* &head, int rank, string title, double price, double rating
     newBook->url = url;
     newBook->next = NULL;
 
-    newBook->next = head;
-    head = newBook;
+    if (head == NULL) {
+        // If the list is empty, make newBook the head
+        head = newBook;
+    } else {
+        // Otherwise, find the last node and insert the newBook after it
+        Book* current = head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newBook;
+    }
 }
-    
+
 
 void printBook(Book* head){
     Book* current = head;
