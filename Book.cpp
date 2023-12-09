@@ -1,115 +1,20 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "Book.h"
+#include "BookFunctions.h"
 
 using namespace std;
 
-struct Book{
-    int rank;
-    string title;
-    double price;
-    double rating;
-    string author;
-    int yearOfPublication;
-    string genre;
-    string url;
-    Book* next;
-};
+extern int last_rank;
 
 
-string parseField(stringstream &sstream);
-void insertBook(Book* &head, int rank, string title, double price, double rating, string author, int yearOfPublication, string genre, string url);
-void printBook(Book* head);
+void insertBook(Book* &head, int rank, string title, double price, double rating, string author, int yearOfPublication, string genre, string url, string description);
+void printBooks(Book* head);
 
 
-int main (){
-    const int MAX_BOOKS = 100;
-    Book* head = NULL;
 
-
-    ///THIS PART IS FILE HANDLING. THE PROGRAM IS READING DATA FROM THE Book Data - Top-100 Trending Books.csv FILE. 
-    ///IGNORE THIS CODE FOR NOW. WE WILL LEARN THAT TOMORROW
-    ifstream file("Book Data - Top-100 Trending Books.csv");
-    if (!file.is_open()){
-        cout << "Error: File not found" << endl;
-        return 0;
-    }
-
-    string line;
-    getline(file, line); //skip the first line;
-
-    while(getline(file, line)){
-        //WHILE LOOP RUNS UNTIL THERE IS STILL A BOOK LEFT TO BE READ
-        stringstream sstream(line);
-
-        int rank;
-        string title;
-        double price;
-        double rating;
-        string author;
-        int yearOfPublication;
-        string genre;
-        string url;
-
-    //WE ARE READING THE DATA FROM THE FILE AND STORING IT IN THE VARIABLES
-    rank = stoi(parseField(sstream));
-    cout << "Rank field: '" << rank << "'" << endl;
-
-
-    title = parseField(sstream);
-    cout << "Title field: '" << title << "'" << endl;
-
-    price = stod(parseField(sstream));
-    cout << "Price: '" << price << "'" << endl;
-
-    rating = stod(parseField(sstream));
-    cout << "Rating: '" << rating << "'" << endl;
-
-    author = parseField(sstream);
-    cout << "Author field: '" << author << "'" << endl;
-
-    yearOfPublication = stoi(parseField(sstream));
-    cout << "Year of Publication: '" << yearOfPublication << "'" << endl;
-
-    genre = parseField(sstream);
-    cout << "Genre field: '" << genre << "'" << endl;
-
-    url = parseField(sstream);
-    cout << "URL field: '" << url << "'" << endl;
-
-
-    insertBook(head, rank, title, price, rating, author, yearOfPublication, genre, url);
-
-    }
-    file.close();
-    cout << "  " << endl;
-    cout << "  " << endl;
-    cout << "  " << endl;
-    cout << "  " << endl;
-    cout << " PRINTING BOOKS " << endl;
-    cout << "  " << endl;
-    cout << "  " << endl;
-    printBook(head);
-
-    cout << "Hello world" << endl;
-    return 0;
-}
-
-string parseField(stringstream &sstream){
-        string field;
-        char peekChar = sstream.peek();
-        if(peekChar == '"'){
-            getline(sstream, field, '"');
-            getline(sstream, field, '"');
-            sstream.ignore(1, ',');
-        } else{
-            getline(sstream, field, ',');
-        }
-        return field;
-    }
-
-
-void insertBook(Book* &head, int rank, string title, double price, double rating, string author, int yearOfPublication, string genre, string url) {
+void insertBook(Book* &head, int rank, string title, double price, double rating, string author, int yearOfPublication, string genre, string url, string description) {
     Book* newBook = new Book;
     newBook->rank = rank;
     newBook->title = title;
@@ -119,6 +24,7 @@ void insertBook(Book* &head, int rank, string title, double price, double rating
     newBook->yearOfPublication = yearOfPublication;
     newBook->genre = genre;
     newBook->url = url;
+    newBook->description = description;
     newBook->next = NULL;
 
     if (head == NULL) {
@@ -135,20 +41,94 @@ void insertBook(Book* &head, int rank, string title, double price, double rating
 }
 
 
-void printBook(Book* head){
+void printBooks(Book* head){
     Book* current = head;
     while(current != NULL){
-        cout << current->rank << endl;
-        cout << current->title << endl;
-        cout << current->price << endl;
-        cout << current->rating << endl;
-        cout << current->author << endl;
-        cout << current->yearOfPublication << endl;
-        cout << current->genre << endl;
-        cout << current->url << endl;
+
+        cout << "Rank: " <<  current->rank << endl;
+        cout << "Title: " << current->title << endl;
+        cout << "Price: $" << current->price << endl;
+        cout << "Rating: " << current->rating << " / 5" << endl;
+        // cout << current->author << endl;
+        // cout << current->yearOfPublication << endl;
+        // cout << current->genre << endl;
+        // cout << current->url << endl;
+        cout << "\n";
+        cout << "\n";
         current = current->next;
     }
 }
 
+
+void addUserBook(Book* &head, const string& filename){
+    string title;
+    double price;
+    double rating;
+    string author;
+    int yearOfPublication;
+    string genre;
+    string url;
+    string description;
+
+    //Automatically assign the next rank
+    int rank = ++last_rank;
+
+    cout << "Enter the title of the book: ";
+    getline(cin, title);
+
+    cout << "Enter the price of the book: ";
+    cin >> price;
+
+    cout << "Enter the rating of the book: ";
+    cin >> rating;
+
+    cin.ignore();
+
+    cout << "Enter the author of the book: ";
+    getline(cin, author);
+
+    cout << "Enter the year of publication of the book: ";
+    cin >> yearOfPublication;
+
+    cin.ignore();
+
+    cout << "Enter the genre of the book: ";
+    getline(cin, genre);
+
+    cout << "Enter the url of the book: ";
+    getline(cin, url);
+
+    cout << "Enter the description of the book: ";
+    getline(cin, description);
+
+    insertBook(head, rank, title, price, rating, author, yearOfPublication, genre, url, description);
+
+    ofstream file;
+    file.open(filename, ios::app);
+     if (!file.is_open()) {
+        cerr << "Error opening file for writing." << endl;
+        return;
+    }
+
+    // Check if the file is empty. If not, start a new line before appending.
+    // file.seekp(0, ios::end); // Move to the end of the file
+    // if (file.tellp() != 0) {
+    //     // File is not empty, start a new line
+    //     file << "\n";
+    // }
+
+    file << rank << ","
+         << "\"" << title << "\","
+         << price << ","
+         << rating << ","
+         << "\"" << author << "\","
+         << yearOfPublication << ","
+         << "\"" << genre << "\","
+         << "\"" << url << "\"\n";
+
+    file.close();       
+    cout << "Book added successfully with rank: " << rank << endl;
+
+}
 
 
