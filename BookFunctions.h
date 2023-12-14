@@ -4,9 +4,14 @@
 
 #include "Book.h"
 
-void insertBook(Book* &head, int rank, std::string title, double price, double rating, std::string author, int yearOfPublication, std::string genre, std::string url, std::string description);
-void printBooks(Book* head);
-void addUserBook(Book* &head, const std::string& filename);
+// Function declarations
+void insertBook(Book* &head, std::string bookId, std::string title, std::string series, std::string author, double rating,
+                std::string description, std::string language, const std::vector<std::string>& genres, 
+                const std::vector<std::string>& characters, std::string bookFormat, double pages, 
+                std::string publisher, std::string firstPublishDate, std::string awards, int likedPercent, 
+                std::string setting, std::string coverImg, double price);
+void printBook(Book* head);
+void viewBook(const Book* book);
 
 // ... any other function declarations ...
 

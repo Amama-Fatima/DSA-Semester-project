@@ -1,109 +1,188 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "Book.h"
+#include <string>
+#include <exception>
 #include "BookFunctions.h"
-#include "ViewBook.h"
-#include "WaitingList.h"
-
 using namespace std;
 
-int last_rank = 0;
-
-
 string parseField(stringstream &sstream);
-int main (){
-    const int MAX_BOOKS = 100;
-    Book* head = NULL;
 
-    ifstream file("Book Data - Top-100 Trending Books with Descriptions.csv");
-    if (!file.is_open()){
-        cout << "Error: File not found" << endl;
-        return 0;
+int main() {
+    ifstream file("FinalBooks.csv");
+    if (!file.is_open()) {
+        cerr << "Error: File not found" << endl;
+        return 1;
     }
 
     string line;
-    getline(file, line); //skip the first line;
+    file.seekg(0);
+    getline(file, line); // Read the first line (should be headers)
+    // cout << "Header Line: " << line << endl; // Print the header line
 
-    while(getline(file, line)){
-        //WHILE LOOP RUNS UNTIL THERE IS STILL A BOOK LEFT TO BE READ
+    // getline(file, line); // Read the second line (should be the first book)
+    // cout << "First Book Line: " << line << endl; // Print the first book line
+
+    // int totalLines = 0;
+    // while (getline(file, line)) {
+    //     totalLines++;
+    // }
+    // cout << "Total lines in the file: " << totalLines << endl;
+
+    // // Reset and read again if needed
+    // file.clear();
+    // file.seekg(0);
+
+    int lineNumber = 0;
+    
+    while (getline(file, line)) {
+        lineNumber++;
+        cout << "Processing line number: " << lineNumber << endl;
         stringstream sstream(line);
 
-        int rank;
+        string bookId;
         string title;
-        double price;
-        double rating;
+        string series;
         string author;
-        int yearOfPublication;
-        string genre;
-        string url;
+        double rating;
         string description;
+        string language;
+        string genres;
+        string characters;
+        string bookFormat;
+        double pages;
+        string publisher;
+        string firstPublishDate;
+        string awards;
+        int likedPercent;
+        string setting;
+        string coverImg;
+        double price;
 
-        //WE ARE READING THE DATA FROM THE FILE AND STORING IT IN THE VARIABLES
-        rank = stoi(parseField(sstream));
-        cout << "Rank field: '" << rank << "'" << endl;
-
-
+        bookId = parseField(sstream);
         title = parseField(sstream);
-
-        price = stod(parseField(sstream));
-
-        rating = stod(parseField(sstream));
-
+        series = parseField(sstream);
         author = parseField(sstream);
 
-        yearOfPublication = stoi(parseField(sstream));
-
-        genre = parseField(sstream);
-
-        url = parseField(sstream);
+        // Try to convert rating
+        try {
+            rating = stod(parseField(sstream));
+        } catch (const std::invalid_argument& e) {
+            cerr << "Invalid argument for stod with rating: '" << parseField(sstream) << "'" << endl;
+            continue;
+        }
 
         description = parseField(sstream);
-        cout << "\n";
-        cout << "Description field: '" << description << "'" << endl;
-        cout << "\n";
+        language = parseField(sstream);
+        genres = parseField(sstream);
+        characters = parseField(sstream);
+        bookFormat = parseField(sstream);
 
-        last_rank = rank;
+        // Try to convert pages
+        try {
+            pages = stod(parseField(sstream));
+        } catch (const std::invalid_argument& e) {
+            cerr << "Invalid argument for stod with pages: '" << parseField(sstream) << "'" << endl;
+            cout << "Book id: " << bookId << endl;
+            continue;
+        }
 
-        insertBook(head, rank, title, price, rating, author, yearOfPublication, genre, url, description);
+        publisher = parseField(sstream);
+        firstPublishDate = parseField(sstream);
+        awards = parseField(sstream);
+
+        // Try to convert likedPercent
+        try {
+            likedPercent = stoi(parseField(sstream));
+        } catch (const std::invalid_argument& e) {
+            cerr << "Invalid argument for stoi with likedPercent: '" << parseField(sstream) << "'" << endl;
+            continue;
+        }
+
+        setting = parseField(sstream);
+        coverImg = parseField(sstream);
+
+        string priceStr = parseField(sstream);  // Extract the price field as a string
+        try {
+            if (!priceStr.empty()) {
+                price = stod(priceStr);  // Attempt to convert price to a double
+            } else {
+                price = 0.0;  // Set a default value if the string is empty
+            }
+        } catch (const std::invalid_argument& e) {
+            cerr << "Invalid argument for stod with priceStr: '" << priceStr << "'" << endl;
+            price = 0.0;  // Set to default value on error
+        }
 
     }
-
 
     file.close();
 
-    if(head!=NULL){
-        cout << "Printing books..." << endl;
-        printBooks(head);
-    } else{
-        cout << "No books to print." << endl;
-    }
-
-    int rankToView;
-    cout << "Enter the rank of the book you want to view: ";
-    cin >> rankToView;
-    viewBook(head, rankToView);
-
-    cout << "Enter the rank of the book you want to view: ";
-    cin >> rankToView;
-    viewBook(head, rankToView);
-
-    showMostRecentlyViewedBook();
-
-
     return 0;
 }
-
-
-string parseField(stringstream &sstream){
-        string field;
-        char peekChar = sstream.peek();
-        if(peekChar == '"'){
-            getline(sstream, field, '"');
-            getline(sstream, field, '"');
-            sstream.ignore(1, ',');
-        } else{
-            getline(sstream, field, ',');
+string parseField(stringstream &sstream) {
+    string field;
+    char peekChar = sstream.peek();
+    if (peekChar == '"') {
+        // Consume the opening quote
+        sstream.get();
+        while(true) {
+            string part;
+            // Use std::getline to read until the next quote character
+            std::getline(sstream, part, '"');
+            field += part;
+            // Check the next character after the quote
+            if (sstream.peek() == '"') {
+                // This is an escaped quote, add it to the field and continue
+                field += '"';
+                // Consume the escaped quote
+                sstream.get();
+            } else {
+                // It's the end of the quoted field, break the loop
+                break;
+            }
         }
-        return field;
+        // Discard the comma after the closing quote
+        if (sstream.peek() == ',') {
+            sstream.ignore();
+        }
+    } else {
+        std::getline(sstream, field, ',');
+    }
+    return field;
 }
+
+// string parseField(stringstream &sstream) {
+//     string field;
+//     char peekChar = sstream.peek();
+//     if (peekChar == '"') {
+//         // Consume the opening quote
+//         sstream.get();
+//         bool insideQuotes = true;
+//         while(insideQuotes) {
+//             string part;
+//             // Use std::getline to read until the next quote character
+//             std::getline(sstream, part, '"');
+//             field += part;
+//             // Check the next character after the quote
+//             if (sstream.peek() == '"') {
+//                 // This is an escaped quote, add it to the field and continue
+//                 field += '"';
+//                 // Consume the escaped quote
+//                 sstream.get();
+//             } else {
+//                 // It's the end of the quoted field
+//                 insideQuotes = false;
+//             }
+//         }
+//         // Discard the comma after the closing quote
+//         if (sstream.peek() == ',') {
+//             sstream.ignore();
+//         }
+//     } else {
+//         std::getline(sstream, field, ',');
+//     }
+//     return field;
+// }
+
+
