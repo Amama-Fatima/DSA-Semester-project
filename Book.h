@@ -28,7 +28,15 @@ struct Book {
     double price;
 
     // Pointer to the next book in a linked list (if you're using one)
-    Book* next;
+    Book* right;
+    Book* left;
+    int height = 0;
+
+    //zero argument constructor
+    Book() : bookId(""), title(""), series(""), author(""), rating(0.0),
+             description(""), language(""), bookFormat(""), pages(0.0),
+             publisher(""), firstPublishDate(""), awards(""), likedPercent(0),
+             setting(""), coverImg(""), price(0.0), right(NULL), left(NULL){}
 
     // Constructor to initialize a Book object
     Book(std::string id, std::string t, std::string ser, std::string auth, double rat,
@@ -38,7 +46,7 @@ struct Book {
         : bookId(id), title(t), series(ser), author(auth), rating(rat),
           description(desc), language(lang), genres(gen), characters(chars),
           bookFormat(format), pages(pg), publisher(pub), firstPublishDate(firstPub),
-          awards(awd), likedPercent(liked), setting(sett), coverImg(cover), price(pr), next(nullptr) {}
+          awards(awd), likedPercent(liked), setting(sett), coverImg(cover), price(pr), right(NULL), left(NULL){}
 };
 
 

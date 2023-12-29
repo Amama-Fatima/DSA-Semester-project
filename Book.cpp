@@ -9,7 +9,11 @@ using namespace std;
 extern int last_rank;
 
 
-void insertBook(Book* &head, int rank, string title, double price, double rating, string author, int yearOfPublication, string genre, string url, string description);
+void insertBook(Book* &head, string bookId, string title, string series, string author, double rating,
+                string description, string language, const vector<string>& genres, 
+                const vector<string>& characters, string bookFormat, double pages, 
+                string publisher, string firstPublishDate, string awards, int likedPercent, 
+                string setting, string coverImg, double price);
 void printBook(Book* head);
 
 
@@ -23,20 +27,22 @@ void insertBook(Book* &head, std::string bookId, std::string title, std::string 
     Book* newBook = new Book(bookId, title, series, author, rating, description, language, genres, characters, 
                              bookFormat, pages, publisher, firstPublishDate, awards, likedPercent, setting, 
                              coverImg, price);
-    
+
     if (head == nullptr) {
         // If the list is empty, make newBook the head
         head = newBook;
     } else {
         // Otherwise, find the last node and insert the newBook after it
         Book* current = head;
-        while (current->next != nullptr) {
-            current = current->next;
+        while (current->right != nullptr) {
+            current = current->right;
         }
-        current->next = newBook;
+        
+        // Update pointers for doubly linked list
+        current->right = newBook;
+        newBook->left = current;
     }
 }
-
 void printBook(const Book* book) {
     if (book != nullptr) {
         cout << "Book ID: " << book->bookId << endl;

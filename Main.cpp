@@ -9,7 +9,7 @@ using namespace std;
 string parseField(stringstream &sstream);
 
 int main() {
-    ifstream file("FinalBooks.csv");
+    ifstream file("ReducedBooks.csv");
     if (!file.is_open()) {
         cerr << "Error: File not found" << endl;
         return 1;
@@ -18,26 +18,10 @@ int main() {
     string line;
     file.seekg(0);
     getline(file, line); // Read the first line (should be headers)
-    // cout << "Header Line: " << line << endl; // Print the header line
+    Book* head = NULL;
 
-    // getline(file, line); // Read the second line (should be the first book)
-    // cout << "First Book Line: " << line << endl; // Print the first book line
-
-    // int totalLines = 0;
-    // while (getline(file, line)) {
-    //     totalLines++;
-    // }
-    // cout << "Total lines in the file: " << totalLines << endl;
-
-    // // Reset and read again if needed
-    // file.clear();
-    // file.seekg(0);
-
-    int lineNumber = 0;
-    
     while (getline(file, line)) {
-        lineNumber++;
-        cout << "Processing line number: " << lineNumber << endl;
+        
         stringstream sstream(line);
 
         string bookId;
@@ -63,8 +47,7 @@ int main() {
         title = parseField(sstream);
         series = parseField(sstream);
         author = parseField(sstream);
-
-        // Try to convert rating
+        
         try {
             rating = stod(parseField(sstream));
         } catch (const std::invalid_argument& e) {
@@ -75,7 +58,9 @@ int main() {
         description = parseField(sstream);
         language = parseField(sstream);
         genres = parseField(sstream);
+        cout << "Genres: " << genres << endl;
         characters = parseField(sstream);
+        cout << "Characters: " << characters << endl;
         bookFormat = parseField(sstream);
 
         // Try to convert pages
@@ -114,6 +99,10 @@ int main() {
             price = 0.0;  // Set to default value on error
         }
 
+        vector<string> bookGenres = parseList(genres);
+        vector<string> bookCharacters = parseList(characters);
+
+        insertBook(head, bookId, title, series, author, rating, description, language, bookGenres, bookCharacters, bookFormat, pages, publisher, firstPublishDate, awards, likedPercent, setting, coverImg, price);
     }
 
     file.close();
@@ -150,6 +139,29 @@ string parseField(stringstream &sstream) {
         std::getline(sstream, field, ',');
     }
     return field;
+}
+
+
+vector<string> parseList(const string &listStr){
+    vector<string> result;
+    istringstream ss(listStr);
+    char openBracket, closeBracket;
+
+    ss >> openBracket; // Read the opening bracket '['
+
+    //read individual strings separated by commas
+    string token;
+    while(getline(ss, token, ',')){
+        //remove the leading and trailing whitespaces
+        size_t start = token.find_first_not_of(" \t");
+        size_t end = token.find_last_not_of(" \t");
+        if(start != string::npos && end != string::npos){
+            result.push_back(token.substr(start, end-start+1));
+        }
+    }
+
+    ss >> closeBracket; // Read the closing bracket ']'
+    return result;
 }
 
 // string parseField(stringstream &sstream) {
