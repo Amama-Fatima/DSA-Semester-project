@@ -109,7 +109,6 @@ int main() {
     }
 
     file.close();
-    genreTable.printTable();
 
     return 0;
 }
