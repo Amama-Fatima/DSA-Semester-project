@@ -6,7 +6,7 @@
 
 using namespace std;
 
-extern int last_rank;
+extern GenreHashTable genreTable;
 
 
 void insertBook(Book* &head, string bookId, string title, string series, string author, double rating,
@@ -23,8 +23,14 @@ void insertBook(Book* &head, std::string bookId, std::string title, std::string 
                 const std::vector<std::string>& characters, std::string bookFormat, double pages, 
                 std::string publisher, std::string firstPublishDate, std::string awards, int likedPercent, 
                 std::string setting, std::string coverImg, double price) {
+
+    vector<Genre> genreVector;
+    for (string genre: genres) {
+        genreTable.insertGenre(genre);
+        genreVector.push_back(Genre(genreTable.hashFunction(genre), genre));
+    }       
     
-    Book* newBook = new Book(bookId, title, series, author, rating, description, language, genres, characters, 
+    Book* newBook = new Book(bookId, title, series, author, rating, description, language, genreVector, characters, 
                              bookFormat, pages, publisher, firstPublishDate, awards, likedPercent, setting, 
                              coverImg, price);
 
@@ -70,8 +76,8 @@ void viewBook(const Book* book) {
     cout << "Description: " << book->description << endl;
     cout << "Language: " << book->language << endl;
     cout << "Genres: ";
-    for (const auto& genre : book->genres) {
-        cout << genre << "; ";
+    for (const Genre genre : book->genres) {
+        cout << genre.name << "; ";
     }
     cout << endl;
     cout << "Characters: ";
@@ -89,5 +95,3 @@ void viewBook(const Book* book) {
     cout << "Cover Image URL: " << book->coverImg << endl;
     cout << "Price: " << book->price << endl;
 }
-
-
