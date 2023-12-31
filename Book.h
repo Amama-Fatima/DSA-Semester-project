@@ -6,6 +6,7 @@
 #include <vector>
 #include "GenreHash.h"
 struct Book {
+    int id;
     std::string bookId;
     std::string title;
     std::string series;
@@ -37,11 +38,11 @@ struct Book {
              setting(""), coverImg(""), price(0.0), right(NULL), left(NULL){}
 
     // Constructor to initialize a Book object
-    Book(std::string id, std::string t, std::string ser, std::string auth, double rat,
+    Book(int id, std::string bId, std::string t, std::string ser, std::string auth, double rat,
          std::string desc, std::string lang, std::vector<Genre> gen, std::vector<std::string> chars,
          std::string format, double pg, std::string pub, std::string firstPub,
          std::string awd, int liked, std::string sett, std::string cover, double pr)
-        : bookId(id), title(t), series(ser), author(auth), rating(rat),
+        : id(id), bookId(bId), title(t), series(ser), author(auth), rating(rat),
           description(desc), language(lang), genres(gen), characters(chars),
           bookFormat(format), pages(pg), publisher(pub), firstPublishDate(firstPub),
           awards(awd), likedPercent(liked), setting(sett), coverImg(cover), price(pr), right(NULL), left(NULL){}

@@ -5,11 +5,14 @@
 #include <exception>
 #include "BookFunctions.h"
 #include "Book.h"
+#include "Graph.h"
 using namespace std;
 
 string parseField(stringstream &sstream);
 vector<string> parseList(const string &listStr);
 GenreHashTable genreTable;
+Graph bookGraph(0);
+
 int main() {
     ifstream file("ReducedBooks.csv");
     if (!file.is_open()) {
@@ -21,9 +24,10 @@ int main() {
     file.seekg(0);
     getline(file, line); // Read the first line (should be headers)
     Book* head = NULL;
-    // int lineCount = 0;
+    int idGenerated = 0;
+    
     while (getline(file, line)) {
-        // lineCount++;
+        idGenerated++;
         stringstream sstream(line);
 
         string bookId;
@@ -105,7 +109,7 @@ int main() {
         vector<string> bookGenres = parseList(genres);
         vector<string> bookCharacters = parseList(characters);
 
-        insertBook(head, bookId, title, series, author, rating, description, language, bookGenres, bookCharacters, bookFormat, pages, publisher, firstPublishDate, awards, likedPercent, setting, coverImg, price);
+        insertBook(head, idGenerated, bookId, title, series, author, rating, description, language, bookGenres, bookCharacters, bookFormat, pages, publisher, firstPublishDate, awards, likedPercent, setting, coverImg, price);
     }
 
     file.close();

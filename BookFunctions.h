@@ -5,7 +5,7 @@
 #include "Book.h"
 using namespace std;
 // Function declarations
-void insertBook(Book* &head, string bookId, string title, string series, string author, double rating,
+void insertBook(Book* &head, int id, string bookId, string title, string series, string author, double rating,
                 string description, string language, const vector<std::string>& genres, 
                 const vector<std::string>& characters, string bookFormat, double pages, 
                 string publisher, string firstPublishDate, string awards, int likedPercent, 

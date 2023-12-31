@@ -9,7 +9,7 @@ using namespace std;
 extern GenreHashTable genreTable;
 
 
-void insertBook(Book* &head, string bookId, string title, string series, string author, double rating,
+void insertBook(Book* &head, int id, string bookId, string title, string series, string author, double rating,
                 string description, string language, const vector<string>& genres, 
                 const vector<string>& characters, string bookFormat, double pages, 
                 string publisher, string firstPublishDate, string awards, int likedPercent, 
@@ -18,7 +18,7 @@ void printBook(Book* head);
 
 
 
-void insertBook(Book* &head, std::string bookId, std::string title, std::string series, std::string author, double rating,
+void insertBook(Book* &head, int id, std::string bookId, std::string title, std::string series, std::string author, double rating,
                 std::string description, std::string language, const std::vector<std::string>& genres, 
                 const std::vector<std::string>& characters, std::string bookFormat, double pages, 
                 std::string publisher, std::string firstPublishDate, std::string awards, int likedPercent, 
@@ -30,7 +30,7 @@ void insertBook(Book* &head, std::string bookId, std::string title, std::string 
         genreVector.push_back(Genre(genreTable.hashFunction(genre), genre));
     }       
     
-    Book* newBook = new Book(bookId, title, series, author, rating, description, language, genreVector, characters, 
+    Book* newBook = new Book(id, bookId, title, series, author, rating, description, language, genreVector, characters, 
                              bookFormat, pages, publisher, firstPublishDate, awards, likedPercent, setting, 
                              coverImg, price);
 
