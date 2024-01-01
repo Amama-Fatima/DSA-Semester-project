@@ -1,53 +1,58 @@
 #include <iostream>
+#include <fstream>
 #include <list>
 #include <vector>
-
+#include "Book.h"
+#include "Graph.h"
 using namespace std;
-struct Edge{
-    int dest;
-    int weight;
-};
 
-struct Vertex{
-    int id;
-    list<Edge> edges;
-    //constructor
-    Vertex(int id) : id(id){}
-};
+extern Graph bookGraph;
 
-class Graph{
-    private:
-        vector<Vertex> vertices;
-        int numVertices;
-        int numEdges;
-        //graph will be directed in this program
-    public:
-        Graph(int numVertices, bool directed);
-        void addVertex(int id);
-        void addEdge(int src, int dest, int weight);
-        void removeEdge(int src, int dest);
-        void printGraph();
-        void printEdges(int vertex);
-        void printBFS(int start);
-        void printDFS(int start);
-        void printDijkstra(int start);
-        void printPrim(int start);
-        void printSub();
-};
+int determineEdgeWeight(Book* b1, Book* b2);
+// void Graph::addVertex(int id){
+//     Vertex v(id);
+//     vertices.push_back(v);
+//     // cout << "Vertex added: " << id << endl;
+// }
 
 void Graph::addVertex(int id){
-    Vertex v(id);
-    vertices.push_back(v);
-    numVertices++;
+    // Check if the id is within the valid range
+    if (id >= 0 && id <= numVertices) {
+        Vertex v(id);
+        vertices[id-1] = v;
+        // cout << "Vertex added with: " << id << " at index " << id-1 << endl;
+    } else {
+        cout << "Invalid vertex id: " << id << endl;
+    }
 }
 
-void Graph::addEdge(int src, int dest, int weight){
-    Edge e;
-    e.dest = dest;
-    e.weight = weight;
-    vertices[src].edges.push_back(e);
-    e.dest = src;
-    vertices[dest].edges.push_back(e);
+
+
+void Graph::addEdge(int src, int dest, int weight) {
+    // Check if edge already exists
+    for (const Edge& e : vertices[src-1].edges) {
+        
+        if (e.dest == dest) {
+            
+            return;
+        }
+    }
+    Edge forwardEdge;
+    forwardEdge.dest = dest;
+    forwardEdge.weight = weight;
+
+    Edge reverseEdge;
+    reverseEdge.dest = src;
+    reverseEdge.weight = weight;
+    vertices[src-1].edges.push_back(forwardEdge);
+
+    // Print debug information
+    // cout << "Added edge to vertex " << src-1 << endl;
+
+
+    vertices[dest-1].edges.push_back(reverseEdge);
+    // cout << " and vertex " << dest-1 << endl;
+    // cout << "Added edge from " << dest << " to " << src << " with weight " << weight << endl;
     numEdges++;
 }
 
@@ -55,6 +60,100 @@ void Graph::addEdge(int src, int dest, int weight){
 
 
 
+void CreateGraph(Book* head) {
+    Book* temp = head;
+    while (temp != NULL) {
+        // Add vertex
+        bookGraph.addVertex(temp->id);
+        temp = temp->right;
+    }
+    
+
+    // Add edges based on genre similarity
+    temp = head;
+    int srcId, destId;
+    while (temp != NULL) {
+        // Initialize next to the start of the list
+        Book* next = head;
+
+        srcId = temp->id;
+
+        // Check if temp->right is not NULL before entering the inner loop
+        while (temp != NULL && next != NULL) {
+            destId = next->id;
+            if (srcId != destId) {
+                int weight = determineEdgeWeight(temp, next);
+                if (weight > 4) {
+                    // cout << "Adding edge between " << srcId << " and " << destId << " of weight " << weight << endl;
+                    bookGraph.addEdge(srcId, destId, weight);
+                }
+            }
+            next = next->right;
+        }
+        // cout << "Edges added for " << srcId << endl;
+
+        // Move to the next node
+        temp = temp->right;
+    }
+
+    //only print all vertices not edges
+    // cout << "Printing all vertices's id: " << endl;
+    // for(Vertex v : bookGraph.vertices){
+    //     cout << v.id << endl;
+    // }
+
+    // cout << "Graph created." << endl;
+}
+
+
+
+
+
+int determineEdgeWeight(Book* b1, Book* b2){
+    int commonGenres = 0;
+    for(Genre genre1 : b1->genres){
+        for(Genre genre2 : b2->genres){
+            if(genre1.name == genre2.name){
+                // cout << "Common genre of book id " << b1->id << " and " << b2->id << " : " << genre1.name << endl;
+                commonGenres++;
+                // cout << commonGenres << endl;
+            }
+        }
+    }
+    return commonGenres;
+}
+
+
+
+void Graph::generateDotFile(string filename){
+    cout << "Generating dot file..." << endl;
+    ofstream dotFile(filename);
+    dotFile << "graph G {" << endl;
+
+    for(Vertex v : vertices){
+        dotFile << v.id << ";" << endl;
+        for(Edge e : v.edges){
+                dotFile << v.id << "  --  " << e.dest << " weight: " << e.weight << " ;" << endl;
+        }
+    }
+
+    dotFile << "}" << endl;
+    dotFile.close();
+    cout << "Dot file generated." << endl;
+}
+
+
+
+
+void Graph::printGraph() {
+    for (const Vertex& v : vertices) {
+        cout << "Vertex " << v.id << ": ";
+        for (const Edge& e : v.edges) {
+            cout << "(" << e.dest << ", " << e.weight << ") ";
+        }
+        cout << endl;
+    }
+}
 
 
 
@@ -63,6 +162,10 @@ void Graph::addEdge(int src, int dest, int weight){
 
 
 
+// for(Edge e : bookGraph.vertices[destId].edges){
+//                         cout << e.dest << endl;
+//                     }
+//                     bookGraph.addEdge(srcId, destId, weight);
 
 
 

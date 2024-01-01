@@ -11,7 +11,7 @@ using namespace std;
 string parseField(stringstream &sstream);
 vector<string> parseList(const string &listStr);
 GenreHashTable genreTable;
-Graph bookGraph(0);
+Graph bookGraph(500);
 
 int main() {
     ifstream file("ReducedBooks.csv");
@@ -26,7 +26,7 @@ int main() {
     Book* head = NULL;
     int idGenerated = 0;
     
-    while (getline(file, line)) {
+    while (getline(file, line) && idGenerated < 501) {
         idGenerated++;
         stringstream sstream(line);
 
@@ -113,7 +113,10 @@ int main() {
     }
 
     file.close();
-
+    CreateGraph(head);
+    cout << "After CreateGraph" << endl;
+    bookGraph.generateDotFile("bookGraph.dot");
+    // bookGraph.printGraph();
     return 0;
 }
 string parseField(stringstream &sstream) {

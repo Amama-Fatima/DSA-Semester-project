@@ -18,6 +18,7 @@ class GenreHashTable{
     public:
         static const int bucket_size = 100;
         vector<vector<string>> table;
+        
         GenreHashTable(): table(bucket_size) {} // the outer vector (rows) will be of size 100 and the inner vector (columns) will be of size 0 (empty) 
         int hashFunction(string& genre){
             int sum = 0;
@@ -60,5 +61,4 @@ class GenreHashTable{
                 }
             }
 }
-
 };
