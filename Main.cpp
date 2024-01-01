@@ -4,9 +4,14 @@
 #include <string>
 #include <exception>
 #include "BookFunctions.h"
+#include "Book.h"
+#include "Graph.h"
 using namespace std;
 
 string parseField(stringstream &sstream);
+vector<string> parseList(const string &listStr);
+GenreHashTable genreTable;
+Graph bookGraph(0);
 
 int main() {
     ifstream file("ReducedBooks.csv");
@@ -19,9 +24,10 @@ int main() {
     file.seekg(0);
     getline(file, line); // Read the first line (should be headers)
     Book* head = NULL;
-
+    int idGenerated = 0;
+    
     while (getline(file, line)) {
-        
+        idGenerated++;
         stringstream sstream(line);
 
         string bookId;
@@ -58,9 +64,10 @@ int main() {
         description = parseField(sstream);
         language = parseField(sstream);
         genres = parseField(sstream);
-        cout << "Genres: " << genres << endl;
+        // cout << "lineCount: " << lineCount << endl; // "lineCount: 1
+        // cout << "Genres: " << genres << endl;
         characters = parseField(sstream);
-        cout << "Characters: " << characters << endl;
+        // cout << "Characters: " << characters << endl;
         bookFormat = parseField(sstream);
 
         // Try to convert pages
@@ -87,22 +94,22 @@ int main() {
         setting = parseField(sstream);
         coverImg = parseField(sstream);
 
-        string priceStr = parseField(sstream);  // Extract the price field as a string
+        string priceStr = parseField(sstream);  
         try {
             if (!priceStr.empty()) {
-                price = stod(priceStr);  // Attempt to convert price to a double
+                price = stod(priceStr);  
             } else {
-                price = 0.0;  // Set a default value if the string is empty
+                price = 0.0;  
             }
         } catch (const std::invalid_argument& e) {
             cerr << "Invalid argument for stod with priceStr: '" << priceStr << "'" << endl;
-            price = 0.0;  // Set to default value on error
+            price = 0.0;  
         }
 
         vector<string> bookGenres = parseList(genres);
         vector<string> bookCharacters = parseList(characters);
 
-        insertBook(head, bookId, title, series, author, rating, description, language, bookGenres, bookCharacters, bookFormat, pages, publisher, firstPublishDate, awards, likedPercent, setting, coverImg, price);
+        insertBook(head, idGenerated, bookId, title, series, author, rating, description, language, bookGenres, bookCharacters, bookFormat, pages, publisher, firstPublishDate, awards, likedPercent, setting, coverImg, price);
     }
 
     file.close();
@@ -113,25 +120,25 @@ string parseField(stringstream &sstream) {
     string field;
     char peekChar = sstream.peek();
     if (peekChar == '"') {
-        // Consume the opening quote
+        
         sstream.get();
         while(true) {
             string part;
-            // Use std::getline to read until the next quote character
+            
             std::getline(sstream, part, '"');
             field += part;
-            // Check the next character after the quote
+            
             if (sstream.peek() == '"') {
-                // This is an escaped quote, add it to the field and continue
+        
                 field += '"';
-                // Consume the escaped quote
+                
                 sstream.get();
             } else {
-                // It's the end of the quoted field, break the loop
+        
                 break;
             }
         }
-        // Discard the comma after the closing quote
+        
         if (sstream.peek() == ',') {
             sstream.ignore();
         }
@@ -147,12 +154,11 @@ vector<string> parseList(const string &listStr){
     istringstream ss(listStr);
     char openBracket, closeBracket;
 
-    ss >> openBracket; // Read the opening bracket '['
+    ss >> openBracket;
 
-    //read individual strings separated by commas
     string token;
     while(getline(ss, token, ',')){
-        //remove the leading and trailing whitespaces
+        
         size_t start = token.find_first_not_of(" \t");
         size_t end = token.find_last_not_of(" \t");
         if(start != string::npos && end != string::npos){
@@ -160,41 +166,8 @@ vector<string> parseList(const string &listStr){
         }
     }
 
-    ss >> closeBracket; // Read the closing bracket ']'
+    ss >> closeBracket;
     return result;
 }
-
-// string parseField(stringstream &sstream) {
-//     string field;
-//     char peekChar = sstream.peek();
-//     if (peekChar == '"') {
-//         // Consume the opening quote
-//         sstream.get();
-//         bool insideQuotes = true;
-//         while(insideQuotes) {
-//             string part;
-//             // Use std::getline to read until the next quote character
-//             std::getline(sstream, part, '"');
-//             field += part;
-//             // Check the next character after the quote
-//             if (sstream.peek() == '"') {
-//                 // This is an escaped quote, add it to the field and continue
-//                 field += '"';
-//                 // Consume the escaped quote
-//                 sstream.get();
-//             } else {
-//                 // It's the end of the quoted field
-//                 insideQuotes = false;
-//             }
-//         }
-//         // Discard the comma after the closing quote
-//         if (sstream.peek() == ',') {
-//             sstream.ignore();
-//         }
-//     } else {
-//         std::getline(sstream, field, ',');
-//     }
-//     return field;
-// }
 
 

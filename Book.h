@@ -4,10 +4,9 @@
 
 #include <string>
 #include <vector>
-
-
-
+#include "GenreHash.h"
 struct Book {
+    int id;
     std::string bookId;
     std::string title;
     std::string series;
@@ -15,7 +14,7 @@ struct Book {
     double rating;
     std::string description;
     std::string language;
-    std::vector<std::string> genres;
+    std::vector<Genre> genres;
     std::vector<std::string> characters;
     std::string bookFormat;
     double pages;
@@ -27,7 +26,7 @@ struct Book {
     std::string coverImg;
     double price;
 
-    // Pointer to the next book in a linked list (if you're using one)
+
     Book* right;
     Book* left;
     int height = 0;
@@ -39,11 +38,11 @@ struct Book {
              setting(""), coverImg(""), price(0.0), right(NULL), left(NULL){}
 
     // Constructor to initialize a Book object
-    Book(std::string id, std::string t, std::string ser, std::string auth, double rat,
-         std::string desc, std::string lang, std::vector<std::string> gen, std::vector<std::string> chars,
+    Book(int id, std::string bId, std::string t, std::string ser, std::string auth, double rat,
+         std::string desc, std::string lang, std::vector<Genre> gen, std::vector<std::string> chars,
          std::string format, double pg, std::string pub, std::string firstPub,
          std::string awd, int liked, std::string sett, std::string cover, double pr)
-        : bookId(id), title(t), series(ser), author(auth), rating(rat),
+        : id(id), bookId(bId), title(t), series(ser), author(auth), rating(rat),
           description(desc), language(lang), genres(gen), characters(chars),
           bookFormat(format), pages(pg), publisher(pub), firstPublishDate(firstPub),
           awards(awd), likedPercent(liked), setting(sett), coverImg(cover), price(pr), right(NULL), left(NULL){}
