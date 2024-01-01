@@ -183,7 +183,7 @@ int mainMenu() {
     cout << "Enter your choice: ";
     cin >> choice;
 
-    switch(choice):
+    switch(choice){
 
     //Search for a book
         case 1:
@@ -196,8 +196,9 @@ int mainMenu() {
             cout << "Enter your choice: ";
             cin >> searchChoice;
 
-            switch(searchChoice):
+            switch(searchChoice){
                 case 1:
+                {
                     cout << "Enter the price range: " << endl;
                     double minPrice, maxPrice;
                     cout << "Enter the minimum price: ";
@@ -211,7 +212,10 @@ int mainMenu() {
                     //     cout << books[i].title << endl;
                     // }
                     break;
+                }
                 case 2:
+                {
+
                     cout << "Enter the page range: " << endl;
                     double minPages, maxPages;
                     cout << "Enter the minimum pages: ";
@@ -225,7 +229,10 @@ int mainMenu() {
                     //     cout << books[i].title << endl;
                     // }
                     break;
+                }
                 case 3:
+                {
+
                     cout << "Enter the liked percent range: " << endl;
                     int minLikedPercent, maxLikedPercent;
                     cout << "Enter the minimum liked percent: ";
@@ -239,16 +246,23 @@ int mainMenu() {
                     //     cout << books[i].title << endl;
                     // }
                     break;
+                }
                 default:
+                {
+
                     cout << "Invalid choice. Please try again." << endl;
                     mainMenu();
                     break;
+                }
 
 
             break;
+            }
 
         //Go to cart
         case 2:
+        {
+
             // cartMenu();
             cout << "Choose an option: " << endl;
             cout << "1. Add a book to the cart" << endl;
@@ -258,36 +272,56 @@ int mainMenu() {
             int cartChoice;
             cout << "Enter your choice: ";
             cin >> cartChoice;
-            switch(cartChoice):
+            switch(cartChoice){
                 case 1:
+                {
+
+
                     cout << "Enter the book id: ";
                     int bookId;
                     cin >> bookId;
                     // Book book = searchById(bookId);
                     // addToCart(book);
                     break;
+                }
                 case 2:
+                {
+
                     // removeFromCart();
                     break;
-                case 3:
+                }
+                case 3:{
+
                     // displayCart();
                     break;
+                }
                 default:
+                {
+
                     cout << "Invalid choice. Please try again." << endl;
                     mainMenu();
                     break;
+                }
             break;
+            }
+        }
 
         //Exit
         case 3:
+        {
+
             cout << "Thank you for using the Book Recommendation System!" << endl;
             break;
+        }
         default:
+        {
+
             cout << "Invalid choice. Please try again." << endl;
             mainMenu();
             break;
+        }
 
-
+    }
 
     return 0;
 }
