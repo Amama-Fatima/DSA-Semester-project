@@ -171,3 +171,121 @@ vector<string> parseList(const string &listStr){
 }
 
 
+int mainMenu() {
+    int choice;
+    cout << "Welcome to the Book Recommendation System!" << endl;
+    cout << "1. Search for a book" << endl;
+    cout << "2. Go to cart" << endl;
+    cout << "3. Exit" << endl;
+    cout << "Enter your choice: ";
+    cin >> choice;
+
+    switch(choice):
+
+    //Search for a book
+        case 1:
+            cout << "Search for book based on: " << endl;
+            cout << "1. Price" << endl;
+            cout << "2. Pages" << endl;
+            cout << "3. Liked percent" << endl;
+
+            int searchChoice;
+            cout << "Enter your choice: ";
+            cin >> searchChoice;
+
+            switch(searchChoice):
+                case 1:
+                    cout << "Enter the price range: " << endl;
+                    double minPrice, maxPrice;
+                    cout << "Enter the minimum price: ";
+                    cin >> minPrice;
+                    cout << "Enter the maximum price: ";
+                    cin >> maxPrice;
+
+                    // vector<Book> books = searchByPrice(minPrice, maxPrice);
+                    // cout << "Books found: " << endl;
+                    // for (int i = 0; i < books.size(); i++) {
+                    //     cout << books[i].title << endl;
+                    // }
+                    break;
+                case 2:
+                    cout << "Enter the page range: " << endl;
+                    double minPages, maxPages;
+                    cout << "Enter the minimum pages: ";
+                    cin >> minPages;
+                    cout << "Enter the maximum pages: ";
+                    cin >> maxPages;
+
+                    // vector<Book> books = searchByPages(minPages, maxPages);
+                    // cout << "Books found: " << endl;
+                    // for (int i = 0; i < books.size(); i++) {
+                    //     cout << books[i].title << endl;
+                    // }
+                    break;
+                case 3:
+                    cout << "Enter the liked percent range: " << endl;
+                    int minLikedPercent, maxLikedPercent;
+                    cout << "Enter the minimum liked percent: ";
+                    cin >> minLikedPercent;
+                    cout << "Enter the maximum liked percent: ";
+                    cin >> maxLikedPercent;
+
+                    // vector<Book> books = searchByLikedPercent(minLikedPercent, maxLikedPercent);
+                    // cout << "Books found: " << endl;
+                    // for (int i = 0; i < books.size(); i++) {
+                    //     cout << books[i].title << endl;
+                    // }
+                    break;
+                default:
+                    cout << "Invalid choice. Please try again." << endl;
+                    mainMenu();
+                    break;
+
+
+            break;
+
+        //Go to cart
+        case 2:
+            // cartMenu();
+            cout << "Choose an option: " << endl;
+            cout << "1. Add a book to the cart" << endl;
+            cout << "2. Remove the latest added book from the cart" << endl;
+            cout << "3. Display the contents of the cart" << endl;
+
+            int cartChoice;
+            cout << "Enter your choice: ";
+            cin >> cartChoice;
+            switch(cartChoice):
+                case 1:
+                    cout << "Enter the book id: ";
+                    int bookId;
+                    cin >> bookId;
+                    // Book book = searchById(bookId);
+                    // addToCart(book);
+                    break;
+                case 2:
+                    // removeFromCart();
+                    break;
+                case 3:
+                    // displayCart();
+                    break;
+                default:
+                    cout << "Invalid choice. Please try again." << endl;
+                    mainMenu();
+                    break;
+            break;
+
+        //Exit
+        case 3:
+            cout << "Thank you for using the Book Recommendation System!" << endl;
+            break;
+        default:
+            cout << "Invalid choice. Please try again." << endl;
+            mainMenu();
+            break;
+
+
+
+    return 0;
+}
+
