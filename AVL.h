@@ -1,3 +1,5 @@
+#ifndef AVL_TREE_H
+#define AVL_TREE_H
 #include <iostream>
 #include "Book.h"
 using namespace std;
@@ -63,6 +65,57 @@ private:
 
         return y;
     }
+
+         AVLNode *insertById(AVLNode *node, Book book)
+    {
+        // Perform standard BST insertion
+        if (node == nullptr)
+            return new AVLNode(book);
+
+        if (book.id < node->data.id)
+            node->left = insertByPrice(node->left, book);
+        else if (book.id > node->data.id)
+            node->right = insertByPrice(node->right, book);
+        else
+        {
+            // If the attribute value is the same, insert into the linked list
+            AVLNode *temp = node;
+            while (temp->another != nullptr)
+            {
+                temp = temp->another;
+            }
+            temp->another = new AVLNode(book);
+            return node;
+        }
+
+        // Update height
+        node->height = 1 + std::max(getHeight(node->left), getHeight(node->right));
+
+        // Get the balance factor
+        int balance = getBalance(node);
+
+        // Perform rotations if needed
+        if (balance > 1 && book.id < node->left->data.id)
+            return rotateRight(node);
+
+        if (balance < -1 && book.id > node->right->data.id)
+            return rotateLeft(node);
+
+        if (balance > 1 && book.id > node->left->data.id)
+        {
+            node->left = rotateLeft(node->left);
+            return rotateRight(node);
+        }
+
+        if (balance < -1 && book.id < node->right->data.id)
+        {
+            node->right = rotateRight(node->right);
+            return rotateLeft(node);
+        }
+
+        return node;
+    }
+
 
     AVLNode *insertByLikedPercent(AVLNode *node, Book book)
     {
@@ -215,33 +268,98 @@ private:
         return node;
     }
 
-     // Recursive function to search in AVL tree
-    Book *searchInAVLTree(AVLNode *node, int value)
+    void searchByLikedPercentRange(AVLNode *node, int minLikedPercent, int maxLikedPercent, std::vector<Book *> &result)
     {
         if (node == nullptr)
-            return nullptr;
+            return;
 
-        if (value < node->data.likedPercent)
-            return searchInAVLTree(node->left, value);
-        else if (value > node->data.likedPercent)
-            return searchInAVLTree(node->right, value);
-        // else
-        // {
-        //     // Value found in AVL tree, now search in linked list
-        //     AVLNode *temp = node;
-        //     while (temp != nullptr)
-        //     {
-        //         if (temp->data.likedPercent == value)
-        //             return &(temp->data);
-        //         temp = temp->another;
-        //     }
-        // }
+        if (node->data.likedPercent >= minLikedPercent && node->data.likedPercent <= maxLikedPercent)
+        {
+            result.push_back(&(node->data));
+        }
 
-        return nullptr; // Not found
+        if (node->data.likedPercent > minLikedPercent)
+        {
+            searchByLikedPercentRange(node->left, minLikedPercent, maxLikedPercent, result);
+        }
+
+        if (node->data.likedPercent < maxLikedPercent)
+        {
+            searchByLikedPercentRange(node->right, minLikedPercent, maxLikedPercent, result);
+        }
     }
+
+    void searchByPriceRange(AVLNode *node, double minPrice, double maxPrice, std::vector<Book *> &result)
+    {
+        if (node == nullptr)
+            return;
+
+        if (node->data.price >= minPrice && node->data.price <= maxPrice)
+        {
+            result.push_back(&(node->data));
+        }
+
+        if (node->data.price > minPrice)
+        {
+            searchByLikedPercentRange(node->left, minPrice, maxPrice, result);
+        }
+
+        if (node->data.price < maxPrice)
+        {
+            searchByLikedPercentRange(node->right, minPrice, maxPrice, result);
+        }
+    }
+
+    void searchByPagesRange(AVLNode *node, double minPages, double maxPages, std::vector<Book *> &result)
+    {
+        if (node == nullptr)
+            return;
+
+        if (node->data.pages >= minPages && node->data.pages <= maxPages)
+        {
+            result.push_back(&(node->data));
+        }
+
+        if (node->data.pages > minPages)
+        {
+            searchByLikedPercentRange(node->left, minPages, maxPages, result);
+        }
+
+        if (node->data.pages < maxPages)
+        {
+            searchByLikedPercentRange(node->right, minPages, maxPages, result);
+        }
+    }
+// Helper function for searching by book ID
+Book *searchById(AVLNode *node, int id)
+{
+    if (node == nullptr || node->data.id == id)
+    {
+        return (node != nullptr && node->data.id == id) ? &(node->data) : nullptr;
+    }
+
+    if (id < node->data.id)
+    {
+        return searchById(node->left, id);
+    }
+    else
+    {
+        return searchById(node->right, id);
+    }
+}
 
 public:
     AVLTree() : root(nullptr) {}
+
+    AVLNode* getRoot()
+    {
+        return root;
+    }
+
+    void insertId(Book book)
+    {
+        root = insertById(root, book);
+    }
 
     void insertLikedPercent(Book book)
     {
@@ -258,30 +376,37 @@ public:
         root = insertByPages(root, book);
     }
 
-    // Function to search by liked percent
-    Book *searchByLikedPercent(int likedPercent)
+        // Function to search by liked percent range
+    std::vector<Book *> searchByLikedPercentRange(int minLikedPercent, int maxLikedPercent)
     {
-        return searchInAVLTree(root, likedPercent);
+        std::vector<Book *> result;
+        searchByLikedPercentRange(root, minLikedPercent, maxLikedPercent, result);
+        return result;
     }
 
-    Book *searchByPrice(double price)
+    // Function to search by price range
+    std::vector<Book *> searchByPriceRange(double minPrice, double maxPrice)
     {
-        return searchInAVLTree(root, price);
+        std::vector<Book *> result;
+        searchByPriceRange(root, minPrice, maxPrice, result);
+        return result;
     }
 
-    Book *searchByPages(double pages)
+    // Function to search by pages range
+    std::vector<Book *> searchByPagesRange(double minPages, double maxPages)
     {
-        return searchInAVLTree(root, pages);
+        std::vector<Book *> result;
+        searchByPagesRange(root, minPages, maxPages, result);
+        return result;
+    }
+
+    // Function to search by book ID
+    Book *searchById(int id)
+    {
+        return searchById(root, id);
     }
 
     // Add other member functions as needed
 };
 
-int main()
-{
-    AVLTree avlTree;
-    // Usage example:
-    avlTree.insertLikedPercent(Book(/* some book data */));
-    // Perform other operations on the AVL tree
-    return 0;
-}
+#endif // AVL_TREE_H
