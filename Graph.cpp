@@ -9,27 +9,18 @@ using namespace std;
 extern Graph bookGraph;
 
 int determineEdgeWeight(Book* b1, Book* b2);
-// void Graph::addVertex(int id){
-//     Vertex v(id);
-//     vertices.push_back(v);
-//     // cout << "Vertex added: " << id << endl;
-// }
 
 void Graph::addVertex(int id){
-    // Check if the id is within the valid range
     if (id >= 0 && id <= numVertices) {
         Vertex v(id);
         vertices[id-1] = v;
-        // cout << "Vertex added with: " << id << " at index " << id-1 << endl;
     } else {
         cout << "Invalid vertex id: " << id << endl;
     }
 }
 
 
-
 void Graph::addEdge(int src, int dest, int weight) {
-    // Check if edge already exists
     for (const Edge& e : vertices[src-1].edges) {
         
         if (e.dest == dest) {
@@ -46,13 +37,8 @@ void Graph::addEdge(int src, int dest, int weight) {
     reverseEdge.weight = weight;
     vertices[src-1].edges.push_back(forwardEdge);
 
-    // Print debug information
-    // cout << "Added edge to vertex " << src-1 << endl;
-
 
     vertices[dest-1].edges.push_back(reverseEdge);
-    // cout << " and vertex " << dest-1 << endl;
-    // cout << "Added edge from " << dest << " to " << src << " with weight " << weight << endl;
     numEdges++;
 }
 
@@ -73,36 +59,29 @@ void CreateGraph(Book* head) {
     temp = head;
     int srcId, destId;
     while (temp != NULL) {
-        // Initialize next to the start of the list
         Book* next = head;
 
         srcId = temp->id;
-
-        // Check if temp->right is not NULL before entering the inner loop
+        
         while (temp != NULL && next != NULL) {
             destId = next->id;
             if (srcId != destId) {
                 int weight = determineEdgeWeight(temp, next);
-                if (weight > 4) {
-                    // cout << "Adding edge between " << srcId << " and " << destId << " of weight " << weight << endl;
+                if (weight > 6) {
                     bookGraph.addEdge(srcId, destId, weight);
                 }
             }
             next = next->right;
         }
-        // cout << "Edges added for " << srcId << endl;
 
-        // Move to the next node
         temp = temp->right;
     }
 
-    //only print all vertices not edges
-    // cout << "Printing all vertices's id: " << endl;
-    // for(Vertex v : bookGraph.vertices){
-    //     cout << v.id << endl;
-    // }
+    cout << "Printing all vertices's id: " << endl;
+    for(Vertex v : bookGraph.vertices){
+        cout << v.id << endl;
+    }
 
-    // cout << "Graph created." << endl;
 }
 
 
@@ -114,9 +93,8 @@ int determineEdgeWeight(Book* b1, Book* b2){
     for(Genre genre1 : b1->genres){
         for(Genre genre2 : b2->genres){
             if(genre1.name == genre2.name){
-                // cout << "Common genre of book id " << b1->id << " and " << b2->id << " : " << genre1.name << endl;
                 commonGenres++;
-                // cout << commonGenres << endl;
+                
             }
         }
     }
