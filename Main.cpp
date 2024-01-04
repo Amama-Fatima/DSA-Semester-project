@@ -11,7 +11,7 @@ using namespace std;
 string parseField(stringstream &sstream);
 vector<string> parseList(const string &listStr);
 GenreHashTable genreTable;
-Graph bookGraph(500);
+Graph bookGraph(1000);
 
 int main() {
     ifstream file("ReducedBooks.csv");
@@ -26,7 +26,7 @@ int main() {
     Book* head = NULL;
     int idGenerated = 0;
     
-    while (getline(file, line) && idGenerated < 501) {
+    while (getline(file, line)) {
         idGenerated++;
         stringstream sstream(line);
 
@@ -64,13 +64,9 @@ int main() {
         description = parseField(sstream);
         language = parseField(sstream);
         genres = parseField(sstream);
-        // cout << "lineCount: " << lineCount << endl; // "lineCount: 1
-        // cout << "Genres: " << genres << endl;
         characters = parseField(sstream);
-        // cout << "Characters: " << characters << endl;
         bookFormat = parseField(sstream);
 
-        // Try to convert pages
         try {
             pages = stod(parseField(sstream));
         } catch (const std::invalid_argument& e) {
