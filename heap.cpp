@@ -1,3 +1,6 @@
+#include "bookheap.h"
+#include <vector>
+#include <stdexcept>         //exceptional handling import
 #include <iostream>
 #include <vector>
 

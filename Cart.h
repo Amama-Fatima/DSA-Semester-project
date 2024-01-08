@@ -1,3 +1,6 @@
+#ifndef CART_H
+#define CART_H
+
 #include <iostream>
 #include <stack>
 #include "Book.h" 
@@ -40,3 +43,4 @@ public:
         }
     }
 };
+#endif // CART_H
