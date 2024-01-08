@@ -6,5 +6,7 @@
 using namespace std;
 
 void CreateGraph(Book* head);
+void createAdjacentGraph(Book* head);
+void primMST(int** graph, int srcId, int numVertices);
 #endif 
 

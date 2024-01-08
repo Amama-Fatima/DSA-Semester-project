@@ -6,12 +6,13 @@
 #include "BookFunctions.h"
 #include "Book.h"
 #include "Graph.h"
+#include "GraphAdj.h"
 using namespace std;
 
 string parseField(stringstream &sstream);
 vector<string> parseList(const string &listStr);
 GenreHashTable genreTable;
-Graph bookGraph(1000);
+GraphAdj bookAdjGraph(20);
 
 int main() {
     ifstream file("ReducedBooks.csv");
@@ -26,10 +27,10 @@ int main() {
     Book* head = NULL;
     int idGenerated = 0;
     
-    while (getline(file, line)) {
+    while (getline(file, line) && idGenerated < 20) {
         idGenerated++;
         stringstream sstream(line);
-
+    
         string bookId;
         string title;
         string series;
@@ -109,10 +110,9 @@ int main() {
     }
 
     file.close();
-    CreateGraph(head);
-    cout << "After CreateGraph" << endl;
-    bookGraph.generateDotFile("bookGraph.dot");
-    // bookGraph.printGraph();
+    createAdjacentGraph(head);
+    cout << "After createAdjacentGraph" << endl;
+    bookAdjGraph.generateDotFile("bookAdjGraph.dot");
     return 0;
 }
 string parseField(stringstream &sstream) {
@@ -322,3 +322,4 @@ int mainMenu() {
     return 0;
 }
 
+    // primMST(bookAdjGraph.adjacencyMatrix, 1, bookAdjGraph.numVertices);
