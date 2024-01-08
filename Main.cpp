@@ -11,12 +11,13 @@
 #include "Cart.h"
 #include "bookheap.h" 
 
+#include "GraphAdj.h"
 using namespace std;
 
 string parseField(stringstream &sstream);
 vector<string> parseList(const string &listStr);
 GenreHashTable genreTable;
-Graph bookGraph(1000);
+GraphAdj bookAdjGraph(20);
 
 int main() {
     ifstream file("ReducedBooks.csv");
@@ -33,10 +34,10 @@ int main() {
     unordered_map<string, BookHeap> genreHeaps;
 
     
-    while (getline(file, line)) {
+    while (getline(file, line) && idGenerated < 20) {
         idGenerated++;
         stringstream sstream(line);
-
+    
         string bookId;
         string title;
         string series;
@@ -120,49 +121,9 @@ int main() {
     }
 
     file.close();
-    CreateGraph(head);
-    cout << "After CreateGraph" << endl;
-    bookGraph.generateDotFile("bookGraph.dot");
-    // bookGraph.printGraph();
-
-
-        AVLTree priceTree;
-        AVLTree pagesTree;
-        AVLTree likedPercentTree;
-        AVLTree idTree;
-
-
-    //Create AVL tree based on price
-    Book* current = head;
-    while (current != nullptr) {
-        priceTree.insertPrice(*current);
-        current = current->right;
-    }
-
-    //Create AVL tree based on pages
-    current = head;
-    while (current != nullptr) {
-        pagesTree.insertPages(*current);
-        current = current->right;
-    }
-
-    //Create AVL tree based on liked percent
-    current = head;
-    while (current != nullptr) {
-        likedPercentTree.insertLikedPercent(*current);
-        current = current->right;
-    }
-
-    //Create AVL tree based on id
-    current = head;
-    while (current != nullptr) {
-        idTree.insertId(*current);
-        current = current->right;
-    }
-
-    Cart cart;
-
-    mainMenu(priceTree, pagesTree, likedPercentTree, idTree, cart);
+    createAdjacentGraph(head);
+    cout << "After createAdjacentGraph" << endl;
+    bookAdjGraph.generateDotFile("bookAdjGraph.dot");
     return 0;
 }
 string parseField(stringstream &sstream) {
@@ -381,4 +342,3 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
 
     return 0;
 }
-
