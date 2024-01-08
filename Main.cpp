@@ -331,5 +331,3 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
 
     return 0;
 }
-
-    // primMST(bookAdjGraph.adjacencyMatrix, 1, bookAdjGraph.numVertices);
