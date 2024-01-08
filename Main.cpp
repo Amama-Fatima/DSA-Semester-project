@@ -3,11 +3,14 @@
 #include <sstream>
 #include <string>
 #include <exception>
+#include <unordered_map>
 #include "BookFunctions.h"
 #include "Book.h"
 #include "Graph.h"
 #include "AVL.h"
 #include "Cart.h"
+#include "bookheap.h" 
+
 using namespace std;
 
 string parseField(stringstream &sstream);
@@ -27,6 +30,8 @@ int main() {
     getline(file, line); // Read the first line (should be headers)
     Book* head = NULL;
     int idGenerated = 0;
+    unordered_map<string, BookHeap> genreHeaps;
+
     
     while (getline(file, line)) {
         idGenerated++;
@@ -108,6 +113,10 @@ int main() {
         vector<string> bookCharacters = parseList(characters);
 
         insertBook(head, idGenerated, bookId, title, series, author, rating, description, language, bookGenres, bookCharacters, bookFormat, pages, publisher, firstPublishDate, awards, likedPercent, setting, coverImg, price);
+
+    
+       
+
     }
 
     file.close();

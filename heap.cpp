@@ -1,61 +1,68 @@
-#include <iostream>
-#include <queue>
+#include "bookheap.h"
 #include <vector>
-#include <string>
-
+#include <stdexcept>         //exceptional handling import
+#include <iostream>
 using namespace std;
 
-// Book structure
-class Book {
+class BookHeap {
+private:
+    vector<Book> heap;
+
+    void heapifyUp(int index) {
+        while (index > 0 && heap[parent(index)].rating < heap[index].rating) {
+            swap(heap[parent(index)], heap[index]);
+            index = parent(index);
+        }
+    }
+
+    void heapifyDown(int index) {
+        int largest = index;
+        int leftChildIndex = leftChild(index);
+        int rightChildIndex = rightChild(index);
+
+        if (leftChildIndex < heap.size() && heap[leftChildIndex].rating > heap[largest].rating) {
+            largest = leftChildIndex;
+        }
+
+        if (rightChildIndex < heap.size() && heap[rightChildIndex].rating > heap[largest].rating) {
+            largest = rightChildIndex;
+        }
+
+        if (largest != index) {
+            swap(heap[index], heap[largest]);
+            heapifyDown(largest);
+        }
+    }
+
+    int parent(int index) { return (index - 1) / 2; }
+    int leftChild(int index) { return 2 * index + 1; }
+    int rightChild(int index) { return 2 * index + 2; }
+
 public:
-    string bookId;
-    string title;
-    double rating;
-    double price;
-    string coverImg;
+    void insert(const Book& book) {
+        heap.push_back(book);
+        heapifyUp(heap.size() - 1);
+    }
 
-    // Constructor
-    Book(string id, string t, double r, double p, string img) 
-        : bookId(id), title(t), rating(r), price(p), coverImg(img) {}
+    Book extractMax() {
+        if (heap.size() == 0) {
+            throw out_of_range("Heap is empty");
+        }
 
-    // Compare function for the priority queue
-    bool operator<(const Book& b) const {
-        return rating < b.rating;  // Max heap based on rating
+        Book max = heap[0];
+        heap[0] = heap.back();
+        heap.pop_back();
+        heapifyDown(0);
+        return max;
+    }
+
+    bool isEmpty() const {
+        return heap.empty();
+    }
+
+    void printHeap() const {
+        for (const auto& book : heap) {
+            cout << "Book: " << book.title << ", Rating: " << book.rating << endl;
+        }
     }
 };
-
-// Function to add a book to the priority queue
-void addBook(priority_queue<Book>& pq, const string& bookId, const string& title, double rating, double price, const string& coverImg) {
-    Book newBook(bookId, title, rating, price, coverImg);
-    pq.push(newBook);
-}
-
-// Function to get the top recommended book
-Book getTopRecommended(priority_queue<Book>& pq) {
-    if (!pq.empty()) {
-        Book topBook = pq.top();
-        pq.pop();
-        return topBook;
-    } else {
-        throw runtime_error("No books available for recommendation.");
-    }
-}
-
-int main() {
-    // Create a priority queue to store books
-    priority_queue<Book> books;
-
-    // Adding books to the priority queue
-    addBook(books, "2767052-the-hunger-games", "The Hunger Games", 4.33, 5.09, "https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1586722975l/2767052.jpg");
-    // Add more books similarly...
-
-    try {
-        // Get the top recommended book
-        Book topBook = getTopRecommended(books);
-        cout << "Top recommended book: " << topBook.title << " (Rating: " << topBook.rating << ")" << endl;
-    } catch (const exception& e) {
-        cout << e.what() << endl;
-    }
-
-    return 0;
-}
