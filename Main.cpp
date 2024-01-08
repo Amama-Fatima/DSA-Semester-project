@@ -225,7 +225,8 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
     cout << "Welcome to the Book Recommendation System!" << endl;
     cout << "1. Search for a book" << endl;
     cout << "2. Go to cart" << endl;
-    cout << "3. Exit" << endl;
+    cout << "3. Give me recommendations" << endl;
+    cout << "4. Exit" << endl;
     cout << "Enter your choice: ";
     cin >> choice;
 
@@ -351,8 +352,18 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
             }
         }
 
+        //Give me recommendations
+        case 3: 
+        {
+            cout << "Give the id of the book for which you want recommendations: ";
+            int bookId;
+            cin >> bookId;
+
+            primMST(bookAdjGraph.adjacencyMatrix, bookId, bookAdjGraph.numVertices);
+        }
+
         //Exit
-        case 3:
+        case 4:
         {
 
             cout << "Thank you for using the Book Recommendation System!" << endl;
