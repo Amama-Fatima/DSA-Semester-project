@@ -6,13 +6,18 @@ using namespace std;
 int* printHeap(CustomHeap* heap, int numVertices);
 
 void calculateDistances(int parent[], int numVertices, int distances[]) {
+    cout << "Inside calculateDistances" << endl;
     for (int i = 0; i < numVertices; i++) {
         int currentVertex = i;
         distances[currentVertex] = 0;
 
         while (parent[currentVertex] != -1) {
-            distances[currentVertex]++;
+            distances[i] = distances[i] + 1;
             currentVertex = parent[currentVertex];
+            if(parent[currentVertex] == -1){
+                cout << "Parent of current vertex is -1" << endl;
+                cout << "Final distance for  " << i << " is " << distances[i] << endl;
+            }
         }
     }
 }
@@ -81,11 +86,6 @@ int* primMST(int** graph, int srcId, int numVertices){
         }
     }
 
-    //print the weight array
-    // for(int i = 0; i < numVertices; i++){
-    //     cout << "weight[" << i << "] = " << weight[i] << endl;
-    // }
-
 
     printMST(parent, graph, srcId-1, numVertices);
 
@@ -101,13 +101,14 @@ int* primMST(int** graph, int srcId, int numVertices){
     }
 
     int* books = printHeap(&heap, numVertices);
+  
     return books;
 
 }
 
 int* printHeap(CustomHeap* heap, int numVertices){
     //removing from heap and printing
-    int books[numVertices];
+    int* books = new int[numVertices];
     int i=0;
     cout << "Following are the ids of the book we would recommend: \n";
     while (!(*heap).isEmpty()) {
