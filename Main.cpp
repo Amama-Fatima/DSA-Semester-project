@@ -187,7 +187,8 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
     cout << "1. Search for a book" << endl;
     cout << "2. Go to cart" << endl;
     cout << "3. Give me recommendations" << endl;
-    cout << "4. Exit" << endl;
+    cout << "4. Check if genre exists" << endl;
+    cout << "5. Exit" << endl;
     cout << "Enter your choice: ";
     cin >> choice;
 
@@ -320,11 +321,23 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
             int bookId;
             cin >> bookId;
 
-            primMST(bookAdjGraph.adjacencyMatrix, bookId, bookAdjGraph.numVertices);
+            // primMST(bookAdjGraph.adjacencyMatrix, bookId, bookAdjGraph.numVertices);
+        }
+
+        case 4:{
+            cout << "Enter the genre you want to check: ";
+            string genre;
+            cin >> genre;
+            if(genreTable.genreExists(genre)){
+                cout << "Genre exists!" << endl;
+            } else {
+                cout << "Genre does not exist!" << endl;
+            }
+            break;
         }
 
         //Exit
-        case 4:
+        case 5:
         {
 
             cout << "Thank you for using the Book Recommendation System!" << endl;
