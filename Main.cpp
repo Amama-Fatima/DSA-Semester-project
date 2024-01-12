@@ -289,7 +289,7 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
                     cout << "Enter the book id: ";
                     int bookId;
                     cin >> bookId;
-                    Book *book = idTree.searchById(bookId);
+                    Book *book = idTree.searchId(bookId);
                     cart.addToCart(*book);
                     break;
                 }
