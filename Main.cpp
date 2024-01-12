@@ -215,7 +215,7 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
                     cout << "Enter the maximum price: ";
                     cin >> maxPrice;
 
-                    vector<Book *> booksPrice = priceTree.searchByPriceRange(minPrice, maxPrice);
+                    vector<Book *> booksPrice = priceTree.searchPriceRange(minPrice, maxPrice);
                     cout << "Books found: " << endl;
                     for (int i = 0; i < booksPrice.size(); i++) {
                         cout << booksPrice[i]->title << endl;
@@ -232,7 +232,7 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
                     cout << "Enter the maximum pages: ";
                     cin >> maxPages;
 
-                    vector<Book *> booksPages = pagesTree.searchByPagesRange(minPages, maxPages);
+                    vector<Book *> booksPages = pagesTree.searchPagesRange(minPages, maxPages);
                     cout << "Books found: " << endl;
                     for (int i = 0; i < booksPages.size(); i++) {
                         cout << booksPages[i]->title << endl;
@@ -249,7 +249,7 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
                     cout << "Enter the maximum liked percent: ";
                     cin >> maxLikedPercent;
 
-                    vector<Book *> booksLikedPercent = likedPercentTree.searchByLikedPercentRange(minLikedPercent, maxLikedPercent);
+                    vector<Book *> booksLikedPercent = likedPercentTree.searchLikedPercentRange(minLikedPercent, maxLikedPercent);
                     cout << "Books found: " << endl;
                     for (int i = 0; i < booksLikedPercent.size(); i++) {
                         cout << booksLikedPercent[i]->title << endl;
