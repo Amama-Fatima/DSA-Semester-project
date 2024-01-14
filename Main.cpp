@@ -33,6 +33,14 @@ int main() {
     int idGenerated = 0;
     unordered_map<string, BookHeap> genreHeaps;
 
+
+
+    AVLTree priceTree;
+    AVLTree pagesTree;
+    AVLTree likedPercentTree;
+    AVLTree idTree;
+    Cart cart;
+
     
     while (getline(file, line) && idGenerated < 20) {
         idGenerated++;
@@ -113,10 +121,11 @@ int main() {
         vector<string> bookGenres = parseList(genres);
         vector<string> bookCharacters = parseList(characters);
 
-        insertBook(head, idGenerated, bookId, title, series, author, rating, description, language, bookGenres, bookCharacters, bookFormat, pages, publisher, firstPublishDate, awards, likedPercent, setting, coverImg, price);
-
-    
-       
+        Book* newBook = insertBook(head, idGenerated, bookId, title, series, author, rating, description, language, bookGenres, bookCharacters, bookFormat, pages, publisher, firstPublishDate, awards, likedPercent, setting, coverImg, price);
+        priceTree.insertPrice(*newBook);
+        pagesTree.insertPages(*newBook);
+        likedPercentTree.insertLikedPercent(*newBook);
+        idTree.insertId(*newBook);
 
     }
 
@@ -124,6 +133,10 @@ int main() {
     createAdjacentGraph(head);
     cout << "After createAdjacentGraph" << endl;
     bookAdjGraph.generateDotFile("bookAdjGraph.dot");
+
+    mainMenu(priceTree, pagesTree, likedPercentTree, idTree, cart);
+
+
     return 0;
 }
 string parseField(stringstream &sstream) {
@@ -214,7 +227,7 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
                     cout << "Enter the maximum price: ";
                     cin >> maxPrice;
 
-                    vector<Book *> booksPrice = priceTree.searchByPriceRange(minPrice, maxPrice);
+                    vector<Book *> booksPrice = priceTree.searchPriceRange(minPrice, maxPrice);
                     cout << "Books found: " << endl;
                     for (int i = 0; i < booksPrice.size(); i++) {
                         cout << booksPrice[i]->title << endl;
@@ -231,7 +244,7 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
                     cout << "Enter the maximum pages: ";
                     cin >> maxPages;
 
-                    vector<Book *> booksPages = pagesTree.searchByPagesRange(minPages, maxPages);
+                    vector<Book *> booksPages = pagesTree.searchPagesRange(minPages, maxPages);
                     cout << "Books found: " << endl;
                     for (int i = 0; i < booksPages.size(); i++) {
                         cout << booksPages[i]->title << endl;
@@ -248,7 +261,7 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
                     cout << "Enter the maximum liked percent: ";
                     cin >> maxLikedPercent;
 
-                    vector<Book *> booksLikedPercent = likedPercentTree.searchByLikedPercentRange(minLikedPercent, maxLikedPercent);
+                    vector<Book *> booksLikedPercent = likedPercentTree.searchLikedPercentRange(minLikedPercent, maxLikedPercent);
                     cout << "Books found: " << endl;
                     for (int i = 0; i < booksLikedPercent.size(); i++) {
                         cout << booksLikedPercent[i]->title << endl;
@@ -257,20 +270,16 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
                 }
                 default:
                 {
-
                     cout << "Invalid choice. Please try again." << endl;
                     // mainMenu();
                     break;
                 }
-
-
             break;
             }
 
         //Go to cart
         case 2:
         {
-
             // cartMenu();
             cout << "Choose an option: " << endl;
             cout << "1. Add a book to the cart" << endl;
@@ -283,12 +292,10 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
             switch(cartChoice){
                 case 1:
                 {
-
-
                     cout << "Enter the book id: ";
                     int bookId;
                     cin >> bookId;
-                    Book *book = idTree.searchById(bookId);
+                    Book *book = idTree.searchId(bookId);
                     cart.addToCart(*book);
                     break;
                 }
@@ -321,6 +328,8 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
             cin >> bookId;
 
             primMST(bookAdjGraph.adjacencyMatrix, bookId, bookAdjGraph.numVertices);
+            // int *recommendedBook = recommendBook();
+            break;
         }
 
         //Exit
@@ -334,7 +343,6 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
         {
 
             cout << "Invalid choice. Please try again." << endl;
-            // mainMenu();
             break;
         }
 

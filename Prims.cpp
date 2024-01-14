@@ -3,6 +3,9 @@
 using namespace std;
 
 
+CustomHeap heap = CustomHeap();
+
+
 int* printHeap(CustomHeap* heap, int numVertices);
 
 void calculateDistances(int parent[], int numVertices, int distances[]) {
@@ -47,7 +50,7 @@ void printMST(int parent[], int** graph, int root, int numVertices) {
 
 
 
-int* primMST(int** graph, int srcId, int numVertices){
+void primMST(int** graph, int srcId, int numVertices){
 
     //array to store constructed MST
     int parent[numVertices];
@@ -92,8 +95,6 @@ int* primMST(int** graph, int srcId, int numVertices){
     calculateDistances(parent, numVertices, distances);
 
 
-    CustomHeap heap = CustomHeap();
-
     for (int i = 0; i < numVertices; i++) {
         // Create the pair: {distance, {vertex, weight}}
         pair<int, pair<int, int>> currentPair = {distances[i], {i + 1, -weight[i]}};
@@ -102,7 +103,7 @@ int* primMST(int** graph, int srcId, int numVertices){
 
     int* books = printHeap(&heap, numVertices);
   
-    return books;
+    // return books;
 
 }
 
@@ -113,10 +114,17 @@ int* printHeap(CustomHeap* heap, int numVertices){
     cout << "Following are the ids of the book we would recommend: \n";
     while (!(*heap).isEmpty()) {
         pair<int, pair<int, int>> currentPair = (*heap).poll();
-        // cout << "Vertex: " << currentPair.second.first << " Distance: " << currentPair.first << " Weight: " << currentPair.second.second << endl;
         cout << currentPair.second.first << endl;
         books[i] = currentPair.second.first;
         i++;
     }
     return books;
+}
+
+
+int* recommendBook() {
+    pair<int, pair<int, int>> currentPair = heap.poll();
+    int* book = new int[1];
+    book[0] = currentPair.second.first;
+    return book;
 }

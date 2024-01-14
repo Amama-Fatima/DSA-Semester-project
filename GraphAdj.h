@@ -6,7 +6,7 @@ using namespace std;
 class GraphAdj{
 public:
     int numVertices;
-    int** adjacencyMatrix;
+    int** adjacencyMatrix; 
     int numEdges;
 
     GraphAdj(int numVertices) : numVertices(numVertices), numEdges(0) {
@@ -26,8 +26,6 @@ public:
     void generateDotFile(string filename);
     
 };
-
-
 
 
 

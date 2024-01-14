@@ -44,8 +44,8 @@ private:
         y->left = T2;
 
         // Update heights
-        y->height = std::max(getHeight(y->left), getHeight(y->right)) + 1;
-        x->height = std::max(getHeight(x->left), getHeight(x->right)) + 1;
+        y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
+        x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
 
         return x;
     }
@@ -60,8 +60,8 @@ private:
         x->right = T2;
 
         // Update heights
-        x->height = std::max(getHeight(x->left), getHeight(x->right)) + 1;
-        y->height = std::max(getHeight(y->left), getHeight(y->right)) + 1;
+        x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
+        y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
 
         return y;
     }
@@ -73,9 +73,9 @@ private:
             return new AVLNode(book);
 
         if (book.id < node->data.id)
-            node->left = insertByPrice(node->left, book);
+            node->left = insertById(node->left, book);
         else if (book.id > node->data.id)
-            node->right = insertByPrice(node->right, book);
+            node->right = insertById(node->right, book);
         else
         {
             // If the attribute value is the same, insert into the linked list
@@ -89,7 +89,7 @@ private:
         }
 
         // Update height
-        node->height = 1 + std::max(getHeight(node->left), getHeight(node->right));
+        node->height = 1 + max(getHeight(node->left), getHeight(node->right));
 
         // Get the balance factor
         int balance = getBalance(node);
@@ -141,7 +141,7 @@ private:
         }
 
         // Update height
-        node->height = 1 + std::max(getHeight(node->left), getHeight(node->right));
+        node->height = 1 + max(getHeight(node->left), getHeight(node->right));
 
         // Get the balance factor
         int balance = getBalance(node);
@@ -191,7 +191,7 @@ private:
         }
 
         // Update height
-        node->height = 1 + std::max(getHeight(node->left), getHeight(node->right));
+        node->height = 1 + max(getHeight(node->left), getHeight(node->right));
 
         // Get the balance factor
         int balance = getBalance(node);
@@ -241,7 +241,7 @@ private:
         }
 
         // Update height
-        node->height = 1 + std::max(getHeight(node->left), getHeight(node->right));
+        node->height = 1 + max(getHeight(node->left), getHeight(node->right));
 
         // Get the balance factor
         int balance = getBalance(node);
@@ -268,7 +268,7 @@ private:
         return node;
     }
 
-    void searchByLikedPercentRange(AVLNode *node, int minLikedPercent, int maxLikedPercent, std::vector<Book *> &result)
+    void searchByLikedPercentRange(AVLNode *node, int minLikedPercent, int maxLikedPercent, vector<Book *> &result)
     {
         if (node == nullptr)
             return;
@@ -289,7 +289,7 @@ private:
         }
     }
 
-    void searchByPriceRange(AVLNode *node, double minPrice, double maxPrice, std::vector<Book *> &result)
+    void searchByPriceRange(AVLNode *node, double minPrice, double maxPrice, vector<Book *> &result)
     {
         if (node == nullptr)
             return;
@@ -310,7 +310,7 @@ private:
         }
     }
 
-    void searchByPagesRange(AVLNode *node, double minPages, double maxPages, std::vector<Book *> &result)
+    void searchByPagesRange(AVLNode *node, double minPages, double maxPages, vector<Book *> &result)
     {
         if (node == nullptr)
             return;
@@ -330,23 +330,23 @@ private:
             searchByLikedPercentRange(node->right, minPages, maxPages, result);
         }
     }
-// Helper function for searching by book ID
-Book *searchById(AVLNode *node, int id)
-{
-    if (node == nullptr || node->data.id == id)
-    {
-        return (node != nullptr && node->data.id == id) ? &(node->data) : nullptr;
-    }
 
-    if (id < node->data.id)
+    Book *searchById(AVLNode *node, int id)
     {
-        return searchById(node->left, id);
+        if (node == nullptr || node->data.id == id)
+        {
+            return (node != nullptr && node->data.id == id) ? &(node->data) : nullptr;
+        }
+
+        if (id < node->data.id)
+        {
+            return searchById(node->left, id);
+        }
+        else
+        {
+            return searchById(node->right, id);
+        }
     }
-    else
-    {
-        return searchById(node->right, id);
-    }
-}
 
 public:
     AVLTree() : root(nullptr) {}
@@ -376,37 +376,32 @@ public:
         root = insertByPages(root, book);
     }
 
-        // Function to search by liked percent range
-    std::vector<Book *> searchByLikedPercentRange(int minLikedPercent, int maxLikedPercent)
+    vector<Book *> searchLikedPercentRange(int minLikedPercent, int maxLikedPercent)
     {
-        std::vector<Book *> result;
+        vector<Book *> result;
         searchByLikedPercentRange(root, minLikedPercent, maxLikedPercent, result);
         return result;
     }
 
-    // Function to search by price range
-    std::vector<Book *> searchByPriceRange(double minPrice, double maxPrice)
+    vector<Book *> searchPriceRange(double minPrice, double maxPrice)
     {
-        std::vector<Book *> result;
+        vector<Book *> result;
         searchByPriceRange(root, minPrice, maxPrice, result);
         return result;
     }
 
-    // Function to search by pages range
-    std::vector<Book *> searchByPagesRange(double minPages, double maxPages)
+    vector<Book *> searchPagesRange(double minPages, double maxPages)
     {
-        std::vector<Book *> result;
+        vector<Book *> result;
         searchByPagesRange(root, minPages, maxPages, result);
         return result;
     }
 
-    // Function to search by book ID
-    Book *searchById(int id)
+    Book *searchId(int id)
     {
         return searchById(root, id);
     }
 
-    // Add other member functions as needed
 };
 
-#endif // AVL_TREE_H
+#endif 

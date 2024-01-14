@@ -14,6 +14,11 @@ void GraphAdj::addEdge(int src, int dest, int weight){
     numEdges++;
 }
 
+// 1, 2, 3, 4, 5,
+// 0  1  2  3  4 
+// 1  2  3  4  5 
+//
+
 
 
 int determineEdgeWeight(Book* b1, Book* b2){
@@ -22,7 +27,6 @@ int determineEdgeWeight(Book* b1, Book* b2){
         for(Genre genre2 : b2->genres){
             if(genre1.name == genre2.name){
                 commonGenres++;
-                
             }
         }
     }
@@ -34,7 +38,6 @@ int determineEdgeWeight(Book* b1, Book* b2){
 void createAdjacentGraph(Book* head){
     Book* temp = head;
 
-    // Add edges based on genre similarity
     temp = head;
     int srcId, destId;
     while(temp != NULL){
