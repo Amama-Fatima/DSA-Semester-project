@@ -81,3 +81,11 @@ void GraphAdj::generateDotFile(string filename) {
     dotFile.close();
     cout << "Dot file generated." << endl;
 }
+
+int GraphAdj::getNumVertices() {
+        return numVertices;
+    }
+
+int** GraphAdj::getAdjacencyMatrix() {
+        return adjacencyMatrix;
+    }
