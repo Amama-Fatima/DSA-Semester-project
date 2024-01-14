@@ -24,6 +24,8 @@ public:
     void printDijkstra(int start);
     void printPrim(int start);
     void generateDotFile(string filename);
+    int getNumVertices();
+    int** getAdjacencyMatrix();
     
 };
 
