@@ -89,6 +89,7 @@ void primMST(int** graph, int srcId, int numVertices){
     }
 
 
+
     // printMST(parent, graph, srcId-1, numVertices);
 
     calculateDistances(parent, numVertices, distances);
