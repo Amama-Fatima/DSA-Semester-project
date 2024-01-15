@@ -12,6 +12,7 @@
 #include "bookheap.h" 
 // #include "Prims.cpp"
 #include "GraphAdj.h"
+#include "DFS.h"
 using namespace std;
 
 string parseField(stringstream &sstream);
@@ -212,7 +213,8 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
     cout << "2. Go to cart" << endl;
     cout << "3. Give me recommendations" << endl;
     cout << "4. Check if genre exists" << endl;
-    cout << "5. Exit" << endl;
+    cout << "5. Perform DFS" << endl;
+    cout << "6. Exit" << endl;
     cout << "Enter your choice: ";
     cin >> choice;
 
@@ -376,8 +378,16 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
             break;
         }
 
+        case 5:{
+            cout << "Enter the book id to start DFS: ";
+            int bookId;
+            cin >> bookId;
+            DFS::performDFS(bookAdjGraph, bookId);
+            break;
+        }
+
         //Exit
-        case 5:
+        case 6:
         {
 
             cout << "Thank you for using the Book Recommendation System!" << endl;

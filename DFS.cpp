@@ -3,9 +3,9 @@
 #include <stack>
 #include "GraphAdj.h"
 #include "Book.h"
-
-void DFS(GraphAdj& graph, int startVertex, Book* books[]) {
-    int numVertices = graph.getNumVertices();
+#include "DFS.h"
+void DFS::performDFS(GraphAdj& graph, int startVertex) {
+    int numVertices = graph.numVertices;
     std::vector<bool> visited(numVertices, false);
     std::stack<int> stack;
 

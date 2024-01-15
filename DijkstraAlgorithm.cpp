@@ -23,7 +23,7 @@ int findBookIdByName(const string& bookName) {
 
 // Modified Dijkstra's algorithm using direct access to the adjacency matrix
 vector<int> dijkstra(int src) {
-    int numVertices = bookAdjGraph.numVertices; // Assuming numVertices is accessible
+    int numVertices = bookAdjGraph.getNumVertices(); // Assuming numVertices is accessible
     vector<int> dist(numVertices, numeric_limits<int>::max());
     vector<bool> sptSet(numVertices, false);
 
