@@ -211,7 +211,7 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
     cout << "2. Go to cart" << endl;
     cout << "3. Give me recommendations" << endl;
     cout << "4. Check if genre exists" << endl;
-    cout << "5. Recommend a path to read books" << endl;
+    cout << "7. Recommend a path to read books" << endl;
     cout << "Enter your choice: ";
     cin >> choice;
 
@@ -375,7 +375,7 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
         }
 
         //Exit
-       case 5:
+       case 7:
         {
             string userChoice;
             cout << "Enter book name from where you would like to start" << endl;
