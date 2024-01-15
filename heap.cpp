@@ -60,6 +60,9 @@ public:
     }
 
     pair<int, pair<int, int>> poll() {
+        // if (items.empty()) {
+        //     return pair<int, pair<int, int>>(-1, pair<int, int>(-1, -1));
+        // }
         pair<int, pair<int, int>> item = items[0];
         items[0] = items.back();
         items.pop_back();

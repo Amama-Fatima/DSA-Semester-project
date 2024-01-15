@@ -3,19 +3,20 @@
 #include <sstream>
 #include <string>
 #include <exception>
-#include <unordered_map>
+// #include <unordered_map>
 #include "BookFunctions.h"
 #include "Book.h"
 #include "Graph.h"
 #include "AVL.h"
 #include "Cart.h"
 #include "bookheap.h" 
-
+// #include "Prims.cpp"
 #include "GraphAdj.h"
 using namespace std;
 
 string parseField(stringstream &sstream);
 vector<string> parseList(const string &listStr);
+int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVLTree idTree, Cart cart);
 GenreHashTable genreTable;
 GraphAdj bookAdjGraph(20);
 
@@ -31,7 +32,7 @@ int main() {
     getline(file, line); // Read the first line (should be headers)
     Book* head = NULL;
     int idGenerated = 0;
-    unordered_map<string, BookHeap> genreHeaps;
+    // unordered_map<string, BookHeap> genreHeaps;
 
 
 
@@ -119,8 +120,13 @@ int main() {
         }
 
         vector<string> bookGenres = parseList(genres);
+        //also add genre to the hash table
+        for (string genre: bookGenres) {
+            genreTable.insertGenre(genre);
+        }
         vector<string> bookCharacters = parseList(characters);
 
+        
         Book* newBook = insertBook(head, idGenerated, bookId, title, series, author, rating, description, language, bookGenres, bookCharacters, bookFormat, pages, publisher, firstPublishDate, awards, likedPercent, setting, coverImg, price);
         priceTree.insertPrice(*newBook);
         pagesTree.insertPages(*newBook);
@@ -134,7 +140,12 @@ int main() {
     cout << "After createAdjacentGraph" << endl;
     bookAdjGraph.generateDotFile("bookAdjGraph.dot");
 
-    mainMenu(priceTree, pagesTree, likedPercentTree, idTree, cart);
+    int i =0;
+    while(true){
+        mainMenu(priceTree, pagesTree, likedPercentTree, idTree, cart);
+        i++;
+        cout << "i: " << i << endl;
+    }
 
 
     return 0;
@@ -209,6 +220,7 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
 
     //Search for a book
         case 1:
+        {
             cout << "Search for book based on: " << endl;
             cout << "1. Price" << endl;
             cout << "2. Pages" << endl;
@@ -275,8 +287,10 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
                     // mainMenu();
                     break;
                 }
-            break;
+            
             }
+            break;
+        }
 
         //Go to cart
         case 2:
@@ -317,29 +331,48 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
                     // mainMenu();
                     break;
                 }
-            break;
             }
+            break;
         }
 
         //Give me recommendations
         case 3: 
-        {
+        {   
             cout << "Give the id of the book for which you want recommendations: ";
             int bookId;
             cin >> bookId;
 
-            // primMST(bookAdjGraph.adjacencyMatrix, bookId, bookAdjGraph.numVertices);
+            primMST(bookAdjGraph.adjacencyMatrix, bookId, bookAdjGraph.numVertices);
+
+
+            int* recBook;
+            int input = 10;
+            while(recBook[0]!=-1 && input == 10){
+                recBook = recommendBook();
+                if(recBook[0]!=-1){
+                    Book* b = idTree.searchId(recBook[0]);
+                    cout << "Recommendation: " << "id: "<< b->id << " Title: " << b->title << endl;
+                }
+
+                cout << "Enter 10 to recommend another book: " << endl;
+                cin >> input;
+             }
+
+
+            break;
         }
 
         case 4:{
             cout << "Enter the genre you want to check: ";
             string genre;
             cin >> genre;
+            
             if(genreTable.genreExists(genre)){
                 cout << "Genre exists!" << endl;
             } else {
                 cout << "Genre does not exist!" << endl;
             }
+            genreTable.printTable();
             break;
         }
 
@@ -358,6 +391,8 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
         }
 
     }
-
     return 0;
 }
+
+
+// dot -Tpng bookAdjGraph.dot -o bookAdjGraph.pn

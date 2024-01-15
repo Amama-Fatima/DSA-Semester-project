@@ -16,7 +16,7 @@ private:
         AVLNode *another;  // Pointer to the next node with the same attribute value
         int height;
 
-        AVLNode(Book book) : data(book), left(nullptr), right(nullptr), height(1) {}
+        AVLNode(Book book) : data(book), left(NULL), right(NULL), another(NULL), height(1) {}
     };
 
     AVLNode *root;

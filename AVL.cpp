@@ -52,9 +52,9 @@ AVLTree::AVLNode *AVLTree::insertById(AVLNode *node, Book book)
             return new AVLNode(book);
 
         if (book.id < node->data.id)
-            node->left = insertByPrice(node->left, book);
+            node->left = insertById(node->left, book);
         else if (book.id > node->data.id)
-            node->right = insertByPrice(node->right, book);
+            node->right = insertById(node->right, book);
         else
         {
             // If the attribute value is the same, insert into the linked list
@@ -151,7 +151,7 @@ AVLTree::AVLNode *AVLTree::insertByLikedPercent(AVLNode *node, Book book)
 
 AVLTree::AVLNode *AVLTree::insertByPrice(AVLNode *node, Book book)
 {
-            if (node == nullptr)
+        if (node == nullptr)
             return new AVLNode(book);
 
         if (book.price < node->data.price)
@@ -159,11 +159,10 @@ AVLTree::AVLNode *AVLTree::insertByPrice(AVLNode *node, Book book)
         else if (book.price > node->data.price)
             node->right = insertByPrice(node->right, book);
         else
-        {
-            // If the attribute value is the same, insert into the linked list
+        {   
             AVLNode *temp = node;
             while (temp->another != nullptr)
-            {
+            {   
                 temp = temp->another;
             }
             temp->another = new AVLNode(book);
@@ -281,18 +280,18 @@ void AVLTree::searchByPriceRange(AVLNode *node, double minPrice, double maxPrice
 
         if (node->data.price > minPrice)
         {
-            searchByLikedPercentRange(node->left, minPrice, maxPrice, result);
+            searchByPriceRange(node->left, minPrice, maxPrice, result);
         }
 
         if (node->data.price < maxPrice)
         {
-            searchByLikedPercentRange(node->right, minPrice, maxPrice, result);
+            searchByPriceRange(node->right, minPrice, maxPrice, result);
         }
 }
 
 void AVLTree::searchByPagesRange(AVLNode *node, double minPages, double maxPages, std::vector<Book *> &result)
 {
-            if (node == nullptr)
+        if (node == NULL)
             return;
 
         if (node->data.pages >= minPages && node->data.pages <= maxPages)
@@ -302,12 +301,12 @@ void AVLTree::searchByPagesRange(AVLNode *node, double minPages, double maxPages
 
         if (node->data.pages > minPages)
         {
-            searchByLikedPercentRange(node->left, minPages, maxPages, result);
+            searchByPagesRange(node->left, minPages, maxPages, result);
         }
 
         if (node->data.pages < maxPages)
         {
-            searchByLikedPercentRange(node->right, minPages, maxPages, result);
+            searchByPagesRange(node->right, minPages, maxPages, result);
         }
 }
 
@@ -377,6 +376,6 @@ std::vector<Book *> AVLTree::searchPagesRange(double minPages, double maxPages)
 }
 
 Book *AVLTree::searchId(int id)
-{
+{   
     return searchById(root, id);
 }

@@ -9,7 +9,6 @@ CustomHeap heap = CustomHeap();
 int* printHeap(CustomHeap* heap, int numVertices);
 
 void calculateDistances(int parent[], int numVertices, int distances[]) {
-    cout << "Inside calculateDistances" << endl;
     for (int i = 0; i < numVertices; i++) {
         int currentVertex = i;
         distances[currentVertex] = 0;
@@ -17,10 +16,10 @@ void calculateDistances(int parent[], int numVertices, int distances[]) {
         while (parent[currentVertex] != -1) {
             distances[i] = distances[i] + 1;
             currentVertex = parent[currentVertex];
-            if(parent[currentVertex] == -1){
-                cout << "Parent of current vertex is -1" << endl;
-                cout << "Final distance for  " << i << " is " << distances[i] << endl;
-            }
+            // if(parent[currentVertex] == -1){
+            //     cout << "Parent of current vertex is -1" << endl;
+            //     cout << "Final distance for  " << i << " is " << distances[i] << endl;
+            // }
         }
     }
 }
@@ -90,7 +89,7 @@ void primMST(int** graph, int srcId, int numVertices){
     }
 
 
-    printMST(parent, graph, srcId-1, numVertices);
+    // printMST(parent, graph, srcId-1, numVertices);
 
     calculateDistances(parent, numVertices, distances);
 
@@ -101,7 +100,7 @@ void primMST(int** graph, int srcId, int numVertices){
         heap.add(currentPair);
     }
 
-    int* books = printHeap(&heap, numVertices);
+    // int* books = printHeap(&heap, numVertices);
   
     // return books;
 
@@ -123,8 +122,12 @@ int* printHeap(CustomHeap* heap, int numVertices){
 
 
 int* recommendBook() {
-    pair<int, pair<int, int>> currentPair = heap.poll();
     int* book = new int[1];
+    if((heap).isEmpty()){
+        book[0] = -1;
+        return book;
+    }
+    pair<int, pair<int, int>> currentPair = heap.poll();
     book[0] = currentPair.second.first;
     return book;
 }

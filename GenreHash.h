@@ -60,5 +60,5 @@ class GenreHashTable{
                     cout << "]" << endl;
                 }
             }
-}
+        }
 };
