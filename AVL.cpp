@@ -255,6 +255,12 @@ void AVLTree::searchByLikedPercentRange(AVLNode *node, int minLikedPercent, int 
         if (node->data.likedPercent >= minLikedPercent && node->data.likedPercent <= maxLikedPercent)
         {
             result.push_back(&(node->data));
+            AVLNode *temp = node->another;
+            while (temp != nullptr)
+            {
+                result.push_back(&(temp->data));
+                temp = temp->another;
+            }
         }
 
         if (node->data.likedPercent > minLikedPercent)
@@ -276,6 +282,12 @@ void AVLTree::searchByPriceRange(AVLNode *node, double minPrice, double maxPrice
         if (node->data.price >= minPrice && node->data.price <= maxPrice)
         {
             result.push_back(&(node->data));
+            AVLNode *temp = node->another;
+            while (temp != nullptr)
+            {
+                result.push_back(&(temp->data));
+                temp = temp->another;
+            }
         }
 
         if (node->data.price > minPrice)
@@ -297,6 +309,13 @@ void AVLTree::searchByPagesRange(AVLNode *node, double minPages, double maxPages
         if (node->data.pages >= minPages && node->data.pages <= maxPages)
         {
             result.push_back(&(node->data));
+            AVLNode *temp = node->another;
+            while (temp != nullptr)
+            {
+                result.push_back(&(temp->data));
+                temp = temp->another;
+            }
+            
         }
 
         if (node->data.pages > minPages)
