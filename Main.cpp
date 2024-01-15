@@ -213,8 +213,8 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
     cout << "3. Give me recommendations" << endl;
     cout << "4. Check if genre exists" << endl;
     cout << "5. Perform DFS" << endl;
-    cout << "6. Exit" << endl;
-    cout << "7. Recommend a path to read books" << endl;
+    cout << "6. Recommend a path to read books" << endl;
+    cout << "7. Exit" << endl;
     cout << "Enter your choice: ";
     cin >> choice;
 
@@ -385,8 +385,8 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
             break;
         }
 
-        //Exit
-       case 7:
+        
+       case 6:
         {
             string userChoice;
             cout << "Enter book name from where you would like to start" << endl;
@@ -401,6 +401,10 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
             cout << "Following is the path we would recommend!" << endl;
             recommendPath(userChoice, head);
 
+            break;
+        }
+        case 7:{
+            cout << "Thankyou for using our book recommendation system" << endl;
             break;
         }
         default:
