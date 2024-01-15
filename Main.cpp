@@ -13,6 +13,7 @@
 #include "DijkstraAlgorithm.cpp"
 // #include "GraphAdj.h"
 #include "DFS.h"
+#include "BFS.h"
 using namespace std;
 
 string parseField(stringstream &sstream);
@@ -378,10 +379,13 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
         }
 
         case 5:{
-            cout << "Enter the book id to start DFS: ";
+            cout << "Enter the book id to start DFS and BFS: ";
             int bookId;
             cin >> bookId;
+            cout << "Performing DFS: " << endl;
             DFS::performDFS(bookAdjGraph, bookId);
+            cout << "Performing BFS: " << endl;
+            BFS::performBFS(bookAdjGraph, bookId);
             break;
         }
 
