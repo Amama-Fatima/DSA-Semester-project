@@ -7,13 +7,12 @@
 using namespace std;
 
 extern GraphAdj bookAdjGraph;
-extern Book* bookListHead; // Global head pointer for the book list
-
 // Function to find the book ID by name
-int findBookIdByName(const string& bookName) {
-    Book* temp = bookListHead;
+int findBookIdByName(string bookName, Book* head) {
+    Book* temp = head;
     while (temp != nullptr) {
         if (temp->title == bookName) {
+            cout << "Book found";
             return temp->id;
         }
         temp = temp->right;
@@ -51,8 +50,8 @@ vector<int> dijkstra(int src) {
 
 
 // Function to recommend books
-void recommendBooks(const string& bookName) {
-    int bookId = findBookIdByName(bookName);
+void recommendPath(string bookName, Book* head) {
+    int bookId = findBookIdByName(bookName, head);
     if (bookId == -1) {
         cout << "Book not found." << endl;
         return;
@@ -65,7 +64,7 @@ void recommendBooks(const string& bookName) {
     for (int i = 0; i < distances.size(); ++i) {
         if (i != bookId - 1 && distances[i] != numeric_limits<int>::max()) {
             // Iterate over the book list to find the book with ID i + 1
-            Book* temp = bookListHead;
+            Book* temp = head;
             while (temp != nullptr) {
                 if (temp->id == i + 1) {
                     cout << "Book: " << temp->title << " (Distance: " << distances[i] << ")" << endl;
