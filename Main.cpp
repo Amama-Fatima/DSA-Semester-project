@@ -10,15 +10,15 @@
 #include "AVL.h"
 #include "Cart.h"
 #include "bookheap.h" 
-// #include "Prims.cpp"
-#include "GraphAdj.h"
+#include "DijkstraAlgorithm.cpp"
+// #include "GraphAdj.h"
 #include "DFS.h"
 #include "BFS.h"
 using namespace std;
 
 string parseField(stringstream &sstream);
 vector<string> parseList(const string &listStr);
-int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVLTree idTree, Cart cart);
+int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVLTree idTree, Cart cart, Book* head);
 GenreHashTable genreTable;
 GraphAdj bookAdjGraph(20);
 
@@ -29,10 +29,10 @@ int main() {
         return 1;
     }
 
+    Book* head = NULL;
     string line;
     file.seekg(0);
     getline(file, line); // Read the first line (should be headers)
-    Book* head = NULL;
     int idGenerated = 0;
     // unordered_map<string, BookHeap> genreHeaps;
 
@@ -142,12 +142,11 @@ int main() {
     cout << "After createAdjacentGraph" << endl;
     bookAdjGraph.generateDotFile("bookAdjGraph.dot");
 
-    int i =0;
-    while(true){
-        mainMenu(priceTree, pagesTree, likedPercentTree, idTree, cart);
-        i++;
-        cout << "i: " << i << endl;
-    }
+    
+    
+    mainMenu(priceTree, pagesTree, likedPercentTree, idTree, cart, head);
+        
+    
 
 
     return 0;
@@ -207,7 +206,7 @@ vector<string> parseList(const string &listStr){
 }
 
 
-int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVLTree idTree, Cart cart) {
+int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVLTree idTree, Cart cart, Book* head) {
     int choice;
     cout << "Welcome to the Book Recommendation System!" << endl;
     cout << "1. Search for a book" << endl;
@@ -215,7 +214,8 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
     cout << "3. Give me recommendations" << endl;
     cout << "4. Check if genre exists" << endl;
     cout << "5. Perform DFS" << endl;
-    cout << "6. Exit" << endl;
+    cout << "6. Recommend a path to read books" << endl;
+    cout << "7. Exit" << endl;
     cout << "Enter your choice: ";
     cin >> choice;
 
@@ -361,7 +361,6 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
                 cin >> input;
              }
 
-
             break;
         }
 
@@ -390,11 +389,26 @@ int mainMenu(AVLTree priceTree, AVLTree pagesTree, AVLTree likedPercentTree, AVL
             break;
         }
 
-        //Exit
-        case 6:
+        
+       case 6:
         {
+            string userChoice;
+            cout << "Enter book name from where you would like to start" << endl;
 
-            cout << "Thank you for using the Book Recommendation System!" << endl;
+
+            // Use cin to capture any residual newline character
+            cin.ignore();
+
+            // Use getline to read the entire line
+            getline(cin, userChoice);
+
+            cout << "Following is the path we would recommend!" << endl;
+            recommendPath(userChoice, head);
+
+            break;
+        }
+        case 7:{
+            cout << "Thankyou for using our book recommendation system" << endl;
             break;
         }
         default:
